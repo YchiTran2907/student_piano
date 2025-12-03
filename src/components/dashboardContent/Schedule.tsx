@@ -1,20 +1,22 @@
 "use client";
 
-import { students, Student } from "@/data/student";
+import { students } from "@/data/student";
 import { useState, useEffect } from "react";
 
-interface ScheduleCardProps {
+export interface ScheduleCardProps {
     day: string;
     time: string;
-    room: string;
+    subject: string;
+    location: string;
 }
 
-function ScheduleCard({ day, time, room }: ScheduleCardProps) {
+function ScheduleCard({ day, time, subject, location }: ScheduleCardProps) {
     return (
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-all">
             <p className="text-lg font-semibold">{day}</p>
             <p className="text-gray-600 mt-1">⏰ {time}</p>
-            <p className="text-gray-600">🏫 {room}</p>
+            <p className="text-gray-600">🎵 {subject}</p>
+            <p className="text-gray-600">🏫 {location}</p>
         </div>
     );
 }
@@ -70,7 +72,13 @@ export default function Schedule() {
             {/* Schedule Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 {scheduleData.map((s, i) => (
-                    <ScheduleCard key={i} day={s.day} time={s.time} room={s.location} />
+                    <ScheduleCard
+                        key={i}
+                        day={s.day}
+                        time={s.time}
+                        subject={s.subject}
+                        location={s.location}
+                    />
                 ))}
             </div>
 
