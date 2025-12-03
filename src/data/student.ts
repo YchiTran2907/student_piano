@@ -1,13 +1,13 @@
 export interface ScheduleItem {
-    date: string;
+    day: string;
     time: string;
     subject: string;
-    teacher: string;
     location: string;
 }
 
 export interface Student {
     name: string;
+    email: string;
     parentName: string;
     contact: string;
     age: number;
