@@ -35,7 +35,8 @@ export const students = [
             { day: "Thứ hai", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
             { day: "Thứ tư", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
             { day: "Thứ sáu", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
-        ]
+        ],
+        fee: 600.000
     },
     {
         name: "Nguyễn Minh An",

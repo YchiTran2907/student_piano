@@ -45,9 +45,8 @@ export default function DashboardLayout({
             {/* Logout button */}
             <div className="absolute top-6 right-6">
                 <button
-                    onClick={() => {
-                        localStorage.removeItem("loggedIn");
-                        localStorage.removeItem("userEmail");
+                    onClick={async () => {
+                        await fetch("/api/logout", { method: "POST" });
                         window.location.href = "/login";
                     }}
                     className="px-4 py-2 bg-white text-gray-900 rounded-xl shadow border border-gray-300
