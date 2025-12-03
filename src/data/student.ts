@@ -19,37 +19,41 @@ export interface Student {
     schedule: ScheduleItem[];
 }
 
-export const student: Student = {
-    name: "Nguyễn Minh Toàn",
-    parentName: "John Smith",
-    contact: "0123 456 789",
-    age: 21,
-    grade: "Grade 6 (Intermediate)",
-    className: "Piano Class A",
-    teacher: "Mr. Ichi",
-    totalSessions: 20,
-    attended: 12,
-    schedule: [
-        {
-            date: "2025-12-05",
-            time: "10:00 - 11:00",
-            subject: "Piano",
-            teacher: "Mr. Ichi",
-            location: "Room A1",
-        },
-        {
-            date: "2025-12-06",
-            time: "14:00 - 15:00",
-            subject: "Music Theory",
-            teacher: "Ms. Lan",
-            location: "Room B2",
-        },
-        {
-            date: "2025-12-07",
-            time: "09:00 - 10:00",
-            subject: "Piano",
-            teacher: "Mr. Ichi",
-            location: "Room A1",
-        },
-    ],
-};
+export const students = [
+    {
+        name: "Nguyễn Minh Toàn",
+        email: "ychitq@gmail.com",
+        parentName: "John Smith",
+        contact: "0123 456 789",
+        age: 21,
+        grade: "Grade 6 (Intermediate)",
+        className: "Piano Class A",
+        teacher: "Mr. Ichi",
+        totalSessions: 20,
+        attended: 12,
+        schedule: [
+            { day: "Thứ hai", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
+            { day: "Thứ tư", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
+            { day: "Thứ sáu", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
+        ]
+    },
+    {
+        name: "Nguyễn Minh An",
+        email: "anan@gmail.com",
+        parentName: "Mary Smith",
+        contact: "0123 555 888",
+        age: 19,
+        grade: "Grade 5 (Beginner)",
+        className: "Piano Class B",
+        teacher: "Ms. Hana",
+        totalSessions: 18,
+        attended: 10,
+        schedule: [
+            { day: "Chủ nhật", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
+            { day: "Thứ hai", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
+            { day: "Thứ ba", time: "15:00 - 16:00", subject: "Piano", location: "Room A2" },
+        ]
+    },
+];
+
+

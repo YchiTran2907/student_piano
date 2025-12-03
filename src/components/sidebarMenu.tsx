@@ -12,7 +12,7 @@ export type MenuOption =
 
 interface SidebarMenuProps {
     activeMenu: MenuOption;
-    onChange: (menu: MenuOption) => void;
+    onChange: (menu: MenuOption) => void; // callback khi click menu
 }
 
 export default function SidebarMenu({ activeMenu, onChange }: SidebarMenuProps) {
@@ -36,9 +36,9 @@ export default function SidebarMenu({ activeMenu, onChange }: SidebarMenuProps) 
                 return (
                     <button
                         key={item.key}
-                        onClick={() => onChange(item.key as MenuOption)}
+                        onClick={() => onChange(item.key as MenuOption)} // gọi callback
                         className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all
-                ${isActive ? "bg-gray-200 font-semibold" : "hover:bg-gray-100"}`}
+                            ${isActive ? "bg-gray-200 font-semibold" : "hover:bg-gray-100"}`}
                     >
                         <Icon size={18} />
                         {item.label}
