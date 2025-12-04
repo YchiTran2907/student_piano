@@ -3,6 +3,10 @@
 import { students } from "@/data/student";
 import { useState, useEffect } from "react";
 
+interface ScheduleProps {
+    userEmail: string;
+}
+
 export interface ScheduleCardProps {
     day: string;
     time: string;
@@ -21,14 +25,13 @@ function ScheduleCard({ day, time, subject, location }: ScheduleCardProps) {
     );
 }
 
-export default function Schedule() {
+export default function Schedule({ userEmail }: ScheduleProps) {
     const [student, setStudent] = useState<typeof students[0] | null>(null);
     const [filterDay, setFilterDay] = useState<string>("All");
 
     useEffect(() => {
-        const email = localStorage.getItem("userEmail");
-        if (email) {
-            const s = students.find((st) => st.email === email);
+        if (userEmail) {
+            const s = students.find((st) => st.email === userEmail);
             if (s) setStudent(s);
         }
     }, []);

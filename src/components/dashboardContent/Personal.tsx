@@ -1,8 +1,12 @@
 "use client";
 
 import { students, Student } from "@/data/student";
-import { schedules, Schedule } from "@/data/schedule";
+import { schedules } from "@/data/schedule";
 import { useEffect, useState } from "react";
+
+interface PersonalProps {
+    userEmail: string;
+}
 
 interface InfoCardProps {
     label: string;
@@ -18,22 +22,26 @@ function InfoCard({ label, value }: InfoCardProps) {
     );
 }
 
-export default function Personal() {
+export default function Personal({ userEmail }: PersonalProps) {
     const [student, setStudent] = useState<Student | null>(null);
     const [year, setYear] = useState<number>(new Date().getFullYear());
-    const [monthlyData, setMonthlyData] = useState<{ month: string; attended: number; total: number }[]>([]);
+    const [monthlyData, setMonthlyData] = useState<
+        { month: string; attended: number; total: number }[]
+    >([]);
 
     useEffect(() => {
-        const email = localStorage.getItem("userEmail");
-        if (!email) return;
+        if (!userEmail) return;
 
-        const foundStudent = students.find((s) => s.email === email);
-        if (foundStudent) setStudent(foundStudent);
+        const foundStudent = students.find((s) => s.email === userEmail);
+        setStudent(foundStudent || null);
 
-        const studentSchedule = schedules.find((s) => s.email === email);
-        const data = studentSchedule?.yearlyData.find(y => y.year === year)?.monthlyData || [];
+        const studentSchedule = schedules.find((s) => s.email === userEmail);
+        const data =
+            studentSchedule?.yearlyData.find((y) => y.year === year)
+                ?.monthlyData || [];
+
         setMonthlyData(data);
-    }, [year]);
+    }, [userEmail, year]);
 
     if (!student) return <p>Loading...</p>;
 

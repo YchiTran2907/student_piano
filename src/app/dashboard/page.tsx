@@ -1,38 +1,15 @@
-"use client";
+import DashboardClient from "@/components/dashboardClient";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { useEffect, useState } from "react";
-import DashboardLayout from "@/components/dashboardLayout";
-import { MenuOption } from "@/components/sidebarMenu";
-import Personal from "@/components/dashboardContent/Personal";
-import Schedule from "@/components/dashboardContent/Schedule";
+export default async function StudentsDashboard() {
+    const cookieStore = cookies();
+    const loggedIn = (await cookieStore).get("loggedIn");
+    const userEmail = (await cookieStore).get("userEmail");
 
-export default function StudentsDashboard() {
-    const [activeMenu, setActiveMenu] = useState<MenuOption>("Personal");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    if (!loggedIn || loggedIn.value !== "true") {
+        redirect("/login");
+    }
 
-    useEffect(() => {
-        const loggedIn = localStorage.getItem("loggedIn");
-        if (loggedIn === "true") setIsLoggedIn(true);
-        else window.location.href = "/login";
-    }, []);
-
-    if (!isLoggedIn) return null;
-
-    // Render content dựa vào activeMenu
-    const renderContent = () => {
-        switch (activeMenu) {
-            case "Personal":
-                return <Personal />;
-            case "Schedule":
-                return <Schedule />;
-            default:
-                return <p>Content for {activeMenu} coming soon...</p>;
-        }
-    };
-
-    return (
-        <DashboardLayout activeMenu={activeMenu} onChangeMenu={setActiveMenu}>
-            {renderContent()}
-        </DashboardLayout>
-    );
+    return <DashboardClient userEmail={userEmail?.value || ""} />;
 }

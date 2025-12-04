@@ -2,6 +2,7 @@
 
 import SidebarMenu, { MenuOption } from "./sidebarMenu";
 import { ReactNode } from "react";
+import { logoutAction } from "@/app/login/actions";
 
 interface DashboardLayoutProps {
     activeMenu: MenuOption;
@@ -44,17 +45,16 @@ export default function DashboardLayout({
 
             {/* Logout button */}
             <div className="absolute top-6 right-6">
-                <button
-                    onClick={async () => {
-                        await fetch("/api/logout", { method: "POST" });
-                        window.location.href = "/login";
-                    }}
-                    className="px-4 py-2 bg-white text-gray-900 rounded-xl shadow border border-gray-300
-                        hover:bg-gray-900 hover:text-white transition-colors duration-300 ease-in-out
-                        font-medium cursor-pointer"
-                >
-                    Log out
-                </button>
+                <form action={logoutAction}>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-white text-gray-900 rounded-xl shadow border border-gray-300
+                hover:bg-gray-900 hover:text-white transition-colors duration-300 ease-in-out
+                font-medium cursor-pointer"
+                    >
+                        Log out
+                    </button>
+                </form>
             </div>
 
             {/* Main content */}

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { accounts } from "@/data/accounts";
+import { loginAction } from "./actions";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -11,40 +11,33 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         const timeout = setTimeout(() => setAnimate(true), 100);
         return () => clearTimeout(timeout);
     }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
 
-        const account = accounts.find(
-            (acc) =>
-                acc.email.toLowerCase().trim() === email.toLowerCase().trim() &&
-                acc.password === password
-        );
+        startTransition(async () => {
+            const res = await loginAction(email, password);
 
-        if (account) {
-            // Lưu thông tin login
-            localStorage.setItem("loggedIn", "true");
-            localStorage.setItem("userEmail", account.email);
-
-            // Chuyển sang dashboard
-            router.push("/dashboard");
-        } else {
-            setError("Email hoặc mật khẩu không đúng");
-        }
+            if (res.success) {
+                router.push("/dashboard");
+            } else {
+                setError(res.message ?? "Đăng nhập thất bại");
+            }
+        });
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-6">
             <div
-                className={`max-w-sm w-full bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg rounded-3xl p-8 transition-all duration-700 ${
-                    animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-                }`}
+                className={`max-w-sm w-full bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg rounded-3xl p-8 transition-all duration-700 ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                    }`}
             >
                 <div className="text-center mb-8">
                     <div className="mx-auto w-14 h-14 rounded-full bg-white/70 border border-gray-200 shadow-sm flex items-center justify-center text-2xl">
