@@ -15,10 +15,9 @@ interface InfoCardProps {
 
 function InfoCard({ label, value }: InfoCardProps) {
     return (
-        // Đã tăng kích thước: p-4 và font size
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-all">
-            <div className="text-sm text-gray-500 truncate">{label}</div> {/* Tăng từ text-xs lên text-sm */}
-            <div className="text-base font-semibold text-gray-900 mt-1 truncate">{value}</div> {/* Tăng từ text-sm lên text-base */}
+            <div className="text-sm text-gray-500 truncate">{label}</div>
+            <div className="text-base font-semibold text-gray-900 mt-1 truncate">{value}</div>
         </div>
     );
 }
@@ -44,7 +43,7 @@ export default function Personal({ userEmail }: PersonalProps) {
         setMonthlyData(data);
     }, [userEmail, year]);
 
-    if (!student) return <p>Loading...</p>;
+    if (!student) return <p className="text-center mt-10 text-gray-600">Loading student data...</p>;
 
     const availableYears = schedules.find(s => s.email === student.email)?.yearlyData.map(y => y.year) || [year];
 
@@ -59,8 +58,8 @@ export default function Personal({ userEmail }: PersonalProps) {
                 <p className="text-gray-500 text-center text-sm">{student.className}</p>
             </div>
 
-            {/* Info Cards - Vẫn giữ layout responsive */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 w-full max-w-4xl">
+            {/* Info Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 w-full max-w-4xl">
                 <InfoCard label="Trình độ" value={student.grade} />
                 <InfoCard label="Giáo viên" value={student.teacher} />
                 <InfoCard label="Email" value={student.email} />
@@ -104,7 +103,6 @@ export default function Personal({ userEmail }: PersonalProps) {
 
                 {/* Chart wrapper */}
                 <div className="w-full overflow-x-auto pb-4">
-                    {/* Đã thêm 'justify-center' để căn giữa nội dung khi nội dung không đủ dài để cuộn */}
                     <div className="flex items-end justify-center gap-2 sm:gap-4 px-2 sm:px-4 min-w-full max-w-[1200px] mx-auto">
                         {monthlyData.map((data) => {
                             const attendedPercent = (data.attended / data.total) * 100;

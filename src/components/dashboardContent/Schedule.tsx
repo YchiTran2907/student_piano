@@ -16,9 +16,9 @@ export interface ScheduleCardProps {
 
 function ScheduleCard({ day, time, subject, location }: ScheduleCardProps) {
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
-            <p className="text-xl font-bold text-gray-900 mb-1">{day}</p>
-            <div className="space-y-1 text-gray-700 text-base">
+        <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+            <p className="text-base font-bold text-gray-900 mb-1">{day}</p>
+            <div className="space-y-0.5 text-gray-700 text-sm">
                 <p>⏰ **Thời gian:** {time}</p>
                 <p>🎵 **Môn học:** {subject}</p>
                 <p>🏫 **Địa điểm:** {location}</p>
@@ -59,7 +59,6 @@ export default function Schedule({ userEmail }: ScheduleProps) {
                 <p className="text-gray-500 text-center text-sm">{student.className}</p>
             </div>
 
-            {/* Filter Buttons */}
             <div className="flex flex-wrap gap-2 mb-6 justify-center w-full px-2 max-w-4xl">
                 {days.map((day) => (
                     <button
@@ -78,7 +77,6 @@ export default function Schedule({ userEmail }: ScheduleProps) {
                 ))}
             </div>
 
-            {/* Schedule Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl mx-auto px-4">
                 {scheduleData.map((s, i) => (
                     <ScheduleCard
