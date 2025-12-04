@@ -1,8 +1,48 @@
 "use client";
 
-import { students, Student } from "@/data/student";
-import { schedules } from "@/data/schedule";
+import studentsData from "@/data/student.json";
+import schedulesData from "@/data/schedule.json";
+
 import { useEffect, useState } from "react";
+
+export interface ScheduleItem {
+    day: string;
+    time: string;
+    subject: string;
+    location: string;
+}
+
+export interface Student {
+    name: string;
+    email: string;
+    parentName: string;
+    contact: string;
+    age: number;
+    grade: string;
+    className: string;
+    teacher: string;
+    totalSessions: number;
+    attended: number;
+    fee: string;
+    schedule: ScheduleItem[];
+}
+
+export interface MonthlyAttendance {
+    month: string;
+    attended: number;
+    total: number;
+    days: number[];
+}
+
+export interface YearlySchedule {
+    year: number;
+    monthlyData: MonthlyAttendance[];
+}
+
+export interface ScheduleData {
+    email: string;
+    yearlyData: YearlySchedule[];
+}
 
 interface PersonalProps {
     userEmail: string;
@@ -15,7 +55,7 @@ interface InfoCardProps {
 
 function InfoCard({ label, value }: InfoCardProps) {
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
             <div className="text-sm text-gray-500 truncate">{label}</div>
             <div className="text-base font-semibold text-gray-900 mt-1 truncate">{value}</div>
         </div>
@@ -23,32 +63,36 @@ function InfoCard({ label, value }: InfoCardProps) {
 }
 
 export default function Personal({ userEmail }: PersonalProps) {
-    const [student, setStudent] = useState<Student | null>(null);
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [monthlyData, setMonthlyData] = useState<
         { month: string; attended: number; total: number }[]
     >([]);
 
+    const student = (studentsData as Student[]).find((s) => s.email === userEmail) || null;
+
     useEffect(() => {
-        if (!userEmail) return;
+        if (!student) {
+            setMonthlyData([]);
+            return;
+        }
 
-        const foundStudent = students.find((s) => s.email === userEmail);
-        setStudent(foundStudent || null);
+        const studentSchedule = (schedulesData as ScheduleData[]).find((s) => s.email === student.email);
 
-        const studentSchedule = schedules.find((s) => s.email === userEmail);
         const data =
             studentSchedule?.yearlyData.find((y) => y.year === year)
                 ?.monthlyData || [];
 
         setMonthlyData(data);
-    }, [userEmail, year]);
 
-    if (!student) return <p className="text-center mt-10 text-gray-600">Loading student data...</p>;
+    }, [student, year]);
 
-    const availableYears = schedules.find(s => s.email === student.email)?.yearlyData.map(y => y.year) || [year];
+    if (!student) return <p className="text-center mt-10 text-gray-600">Không tìm thấy dữ liệu học viên.</p>;
+
+    const availableYears = (schedulesData as ScheduleData[]).find(s => s.email === student.email)?.yearlyData.map(y => y.year) || [year];
 
     return (
         <div className="flex flex-col items-center w-full px-2 sm:px-4">
+
             {/* Header */}
             <div className="flex flex-col items-center mb-8 mt-4">
                 <div className="w-20 h-20 rounded-full bg-gray-200 text-2xl flex items-center justify-center text-gray-500">
@@ -64,9 +108,10 @@ export default function Personal({ userEmail }: PersonalProps) {
                 <InfoCard label="Giáo viên" value={student.teacher} />
                 <InfoCard label="Email" value={student.email} />
                 <InfoCard label="Lớp" value={student.className} />
-                <InfoCard label="Tên phụ huynh/Người đại diện" value={student.parentName} />
+                <InfoCard label="Tên phụ huynh" value={student.parentName} />
                 <InfoCard label="Số điện thoại" value={student.contact} />
                 <InfoCard label="Tuổi" value={student.age} />
+                <InfoCard label="Học phí" value={student.fee} />
             </div>
 
             {/* Year Selector */}

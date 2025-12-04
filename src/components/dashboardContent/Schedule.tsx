@@ -1,7 +1,22 @@
 "use client";
 
-import { students } from "@/data/student";
+import studentsData from "@/data/student.json";
 import { useState, useEffect } from "react";
+
+export interface ScheduleItem {
+    day: string;
+    time: string;
+    subject: string;
+    location: string;
+}
+
+interface Student {
+    name: string;
+    email: string;
+    className: string;
+    schedule: ScheduleItem[];
+}
+
 
 interface ScheduleProps {
     userEmail: string;
@@ -16,32 +31,27 @@ export interface ScheduleCardProps {
 
 function ScheduleCard({ day, time, subject, location }: ScheduleCardProps) {
     return (
-        <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+        <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300">
             <p className="text-base font-bold text-gray-900 mb-1">{day}</p>
             <div className="space-y-0.5 text-gray-700 text-sm">
-                <p>⏰ **Thời gian:** {time}</p>
-                <p>🎵 **Môn học:** {subject}</p>
-                <p>🏫 **Địa điểm:** {location}</p>
+                <p>⏰ Thời gian: {time}</p>
+                <p>🎵 Môn học: {subject}</p>
+                <p>🏫 Địa điểm: {location}</p>
             </div>
         </div>
     );
 }
 
 export default function Schedule({ userEmail }: ScheduleProps) {
-    const [student, setStudent] = useState<typeof students[0] | null>(null);
     const [filterDay, setFilterDay] = useState<string>("All");
 
-    useEffect(() => {
-        if (userEmail) {
-            const s = students.find((st) => st.email === userEmail);
-            if (s) setStudent(s);
-        }
-    }, [userEmail]);
+    const student = (studentsData as Student[]).find((st) => st.email === userEmail) || null;
 
-    if (!student) return <p className="text-center mt-10 text-gray-600">Đang tải dữ liệu học viên...</p>;
+    if (!student) return <p className="text-center mt-10 text-gray-600">Không tìm thấy dữ liệu học viên.</p>;
 
     const days = ["All", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy", "Chủ nhật"];
 
+    // Lọc dữ liệu lịch học
     const scheduleData =
         filterDay === "All"
             ? student.schedule
@@ -59,13 +69,14 @@ export default function Schedule({ userEmail }: ScheduleProps) {
                 <p className="text-gray-500 text-center text-sm">{student.className}</p>
             </div>
 
+            {/* Filter Buttons */}
             <div className="flex flex-wrap gap-2 mb-6 justify-center w-full px-2 max-w-4xl">
                 {days.map((day) => (
                     <button
                         key={day}
                         onClick={() => setFilterDay(day)}
                         className={`
-                            px-3 py-1.5 rounded-lg border border-gray-300 font-medium transition-all text-sm sm:px-4 sm:py-2 sm:rounded-xl sm:text-base
+                            px-3 py-1.5 rounded-lg border border-gray-300 font-medium transition-all duration-400 text-sm sm:px-4 sm:py-2 sm:rounded-xl sm:text-base
                             ${filterDay === day
                                 ? "bg-gray-900 text-white shadow-md"
                                 : "bg-white text-gray-900 hover:bg-gray-900 hover:text-white hover:shadow-sm"
@@ -77,6 +88,7 @@ export default function Schedule({ userEmail }: ScheduleProps) {
                 ))}
             </div>
 
+            {/* Schedule Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl mx-auto px-4">
                 {scheduleData.map((s, i) => (
                     <ScheduleCard
