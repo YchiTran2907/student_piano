@@ -39,5 +39,10 @@ export async function logoutAction() {
         expires: new Date(0)
     });
 
+    (await cookieStore).set("loggedIn", "", {
+        path: "/",
+        expires: new Date(0),
+    });
+
     redirect("/login");
 }
