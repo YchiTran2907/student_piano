@@ -1,0 +1,25 @@
+[
+    {
+        "email": "ychitq@gmail.com",
+        "progressData": [
+            {
+                "date": "2024-03-15",
+                "type": "Mục tiêu",
+                "title": "Hoàn thành Sách Piano cơ bản 1",
+                "description": "Đã nắm vững tư thế ngồi, ký hiệu nốt nhạc cơ bản và 5 bài tập ngón đầu tiên."
+            },
+            {
+                "date": "2024-05-20",
+                "type": "Bài học",
+                "title": "Học tác phẩm 'Ode to Joy'",
+                "description": "Bắt đầu làm quen với phách 3/4 và sự phối hợp tay trái/phải đơn giản."
+            },
+            {
+                "date": "2025-01-05",
+                "type": "Đánh giá",
+                "title": "Đánh giá học kỳ 1",
+                "description": "Kỹ thuật ngón 4/5, cảm thụ âm nhạc 3/5. Cần cải thiện tốc độ luyện tập."
+            }
+        ]
+    }
+]
