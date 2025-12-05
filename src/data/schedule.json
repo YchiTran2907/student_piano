@@ -8,13 +8,20 @@
                     {
                         "month": "4",
                         "attended": 8,
-                        "total": 8,
                         "days": [
                             1,
                             5,
-                            8,
-                            12,
                             15,
+                            19,
+                            22,
+                            26
+                        ]
+                    },
+                    {
+                        "month": "5",
+                        "attended": 8,
+                        "total": 3,
+                        "days": [
                             19,
                             22,
                             26
@@ -33,7 +40,6 @@
                     {
                         "month": "4",
                         "attended": 2,
-                        "total": 8,
                         "days": [
                             22,
                             26

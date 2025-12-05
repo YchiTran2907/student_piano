@@ -30,7 +30,6 @@ export interface Student {
 export interface MonthlyAttendance {
     month: string;
     attended: number;
-    total: number;
     days: number[];
 }
 
@@ -65,7 +64,7 @@ function InfoCard({ label, value }: InfoCardProps) {
 export default function Personal({ userEmail }: PersonalProps) {
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [monthlyData, setMonthlyData] = useState<
-        { month: string; attended: number; total: number }[]
+        { month: string; attended: number; days: number[] }[]
     >([]);
 
     const student = (studentsData as Student[]).find((s) => s.email === userEmail) || null;
@@ -150,26 +149,21 @@ export default function Personal({ userEmail }: PersonalProps) {
                 <div className="w-full overflow-x-auto pb-4">
                     <div className="flex items-end justify-center gap-2 sm:gap-4 px-2 sm:px-4 min-w-full max-w-[1200px] mx-auto">
                         {monthlyData.map((data) => {
-                            const attendedPercent = (data.attended / data.total) * 100;
+                            const attendedPercent = (data.days.length / data.attended) * 100;
 
                             return (
                                 <div key={data.month} className="flex flex-col items-center group relative flex-shrink-0 min-w-[40px] sm:min-w-[50px] md:min-w-[60px] max-w-[80px]">
                                     {/* Cột */}
                                     <div className="w-full h-40 sm:h-48 relative bg-gray-300 rounded-xl overflow-hidden flex items-end shadow-inner transition-all duration-500 hover:scale-[1.02]">
                                         <div className="w-full rounded-t-xl bg-gradient-to-t from-blue-400 to-blue-600 shadow-md" style={{ height: `${attendedPercent}%` }}></div>
-
-                                        {/* Tooltip */}
-                                        <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-[10px] px-1 py-0.5 rounded-md whitespace-nowrap z-10">
-                                            {data.attended} / {data.total} buổi
-                                        </div>
                                     </div>
 
                                     <div className="text-[10px] sm:text-xs mt-1 font-medium text-gray-700">
-                                        {data.attended}/{data.total}
+                                        {data.days.length}/{data.attended} buổi
                                     </div>
 
                                     <div className="text-[9px] sm:text-[10px] mt-0.5 text-gray-500">
-                                        Th. {data.month}
+                                        Tháng {data.month}
                                     </div>
                                 </div>
                             );
