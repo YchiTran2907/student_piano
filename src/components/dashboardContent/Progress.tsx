@@ -1,11 +1,13 @@
 "use client";
 
+// JSON
 import studentsData from "@/data/student.json";
 import schedulesData from "@/data/schedule.json";
 import progressData from "@/data/progress.json";
 
 import { useMemo } from "react";
 import { ScheduleData, Student } from "./Personal";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ProgressItem {
     date: string;
@@ -14,9 +16,23 @@ interface ProgressItem {
     description: string;
 }
 
+interface Score {
+    Technique: number;
+    SightReading: number;
+    Musicality: number;
+    Theory: number;
+}
+
+interface Evaluation {
+    date: string;
+    label: string;
+    scores: Score;
+}
+
 interface ProgressData {
     email: string;
     progressData: ProgressItem[];
+    evaluationData: Evaluation[];
 }
 
 interface ProgressProps {
@@ -61,6 +77,79 @@ function TimelineCard({ date, type, title, description }: TimelineCardProps) {
     );
 }
 
+interface SkillRadarChartProps {
+    evaluations: Evaluation[];
+}
+
+const MAX_SCORE = 10;
+const SKILL_AXIS = [
+    { key: 'Technique', fullMark: MAX_SCORE, name: 'Kỹ thuật ngón' },
+    { key: 'SightReading', fullMark: MAX_SCORE, name: 'Thị tấu' },
+    { key: 'Musicality', fullMark: MAX_SCORE, name: 'Cảm thụ' },
+    { key: 'Theory', fullMark: MAX_SCORE, name: 'Lý thuyết' },
+];
+
+function SkillRadarChart({ evaluations }: SkillRadarChartProps) {
+    if (evaluations.length === 0) {
+        return <p className="text-center text-gray-500 py-4">Chưa có dữ liệu đánh giá kỹ năng.</p>;
+    }
+
+    // Chuyển đổi dữ liệu đánh giá thành định dạng Recharts cần
+    const chartData = SKILL_AXIS.map(axis => {
+        const item: Record<string, any> = { skill: axis.name, fullMark: axis.fullMark };
+
+        evaluations.forEach(evalItem => {
+            const dataKey = evalItem.label;
+            item[dataKey] = evalItem.scores[axis.key as keyof Score];
+        });
+        return item;
+    });
+
+    // Tạo danh sách các đợt đánh giá (labels) cho Recharts <Radar>
+    const radarLines = evaluations.map((evalItem, index) => ({
+        key: evalItem.label,
+        color: index === 0 ? '#3b82f6' : (index === 1 ? '#ef4444' : '#10b981'),
+    }));
+
+    return (
+        <ResponsiveContainer width="100%" height={400}>
+            <RadarChart
+                cx="50%"
+                cy="50%"
+                outerRadius="80%"
+                data={chartData}
+            >
+                <PolarGrid stroke="#e5e7eb" />
+                <PolarAngleAxis
+                    dataKey="skill"
+                    stroke="#4b5563"
+                    tick={{ fontSize: 12, fontWeight: 500 }}
+                />
+                <PolarRadiusAxis
+                    domain={[0, MAX_SCORE]}
+                    angle={90}
+                    stroke="#9ca3af"
+                />
+
+                {radarLines.map((line, index) => (
+                    <Radar
+                        key={line.key}
+                        name={line.key}
+                        dataKey={line.key}
+                        stroke={line.color}
+                        fill={line.color}
+                        fillOpacity={0.4}
+                        opacity={0.8}
+                    />
+                ))}
+
+                <Tooltip />
+                <Legend />
+            </RadarChart>
+        </ResponsiveContainer>
+    );
+}
+
 export default function Progress({ userEmail }: ProgressProps) {
     const students = studentsData as Student[];
     const schedules = schedulesData as ScheduleData[];
@@ -82,19 +171,25 @@ export default function Progress({ userEmail }: ProgressProps) {
             });
         });
 
-        const attendanceRate = totalSessions > 0 ? Math.round((totalSessions / totalAttended ) * 100) : 0;
+        const attendanceRate = totalSessions > 0 ? Math.round((totalSessions / totalAttended) * 100) : 0;
 
-        return { totalAttended, totalSessions, attendanceRate};
+        return { totalAttended, totalSessions, attendanceRate };
     }, [userEmail, schedules]);
 
 
-    // 2. Lấy dữ liệu Timeline
+    // Lấy dữ liệu Timeline
     const timelineData = useMemo(() => {
         const studentProgress = progress.find(p => p.email === userEmail);
         if (!studentProgress) return [];
 
         // Sắp xếp theo ngày mới nhất trước
         return studentProgress.progressData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }, [userEmail, progress]);
+
+    // Lấy dữ liệu Đánh giá Kỹ năng (cho Biểu đồ Radar)
+    const evaluations = useMemo(() => {
+        const studentProgress = progress.find(p => p.email === userEmail);
+        return studentProgress?.evaluationData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) || [];
     }, [userEmail, progress]);
 
     if (!student) return <p className="text-center mt-10 text-gray-600">Không tìm thấy dữ liệu học viên.</p>;
@@ -125,6 +220,15 @@ export default function Progress({ userEmail }: ProgressProps) {
                         </p>
                         <p className="text-sm text-gray-500">Tỷ lệ Chuyên cần</p>
                     </div>
+                </div>
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto mb-10">
+                <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+                    🕸️ Tiến Độ Kỹ Năng (Thang điểm 1 - 10)
+                </h2>
+                <div className="bg-white p-5 rounded-xl shadow-lg border border-gray-100">
+                    <SkillRadarChart evaluations={evaluations} />
                 </div>
             </div>
 

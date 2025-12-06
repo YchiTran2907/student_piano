@@ -20,6 +20,28 @@
                 "title": "Đánh giá học kỳ 1",
                 "description": "Kỹ thuật ngón 4/5, cảm thụ âm nhạc 3/5. Cần cải thiện tốc độ luyện tập."
             }
+        ],
+        "evaluationData": [
+            {
+                "date": "2024-06-30",
+                "label": "Đánh giá Học kỳ 1 (2024)",
+                "scores": {
+                    "Technique": 10,
+                    "SightReading": 10,
+                    "Musicality": 10,
+                    "Theory": 10
+                }
+            },
+            {
+                "date": "2025-01-05",
+                "label": "Đánh giá Học kỳ 2 (2024)",
+                "scores": {
+                    "Technique": 8,
+                    "SightReading": 7,
+                    "Musicality": 7,
+                    "Theory": 9
+                }
+            }
         ]
     }
 ]

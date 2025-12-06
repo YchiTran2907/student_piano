@@ -1,8 +1,10 @@
 "use client";
 
+// JSON
 import studentsData from "@/data/student.json";
 import schedulesData from "@/data/schedule.json";
 
+// Library
 import { useState, useMemo, useEffect } from "react";
 
 export interface ScheduleItem {
