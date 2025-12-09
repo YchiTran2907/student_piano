@@ -1,5 +1,6 @@
 import prisma from './prisma';
 import { notFound } from 'next/navigation';
+import type { Evaluation as PrismaEvaluation } from '@prisma/client'
 
 export interface ScheduleItem {
     id: number;
@@ -119,10 +120,10 @@ export async function getProgressDataByEmail(email: string): Promise<ProgressAnd
             orderBy: { date: 'desc' },
         });
 
-        const evaluations = evaluationList.map(e => ({
+        const evaluations = evaluationList.map((e: PrismaEvaluation) => ({
             ...e,
             scores: JSON.parse(e.scores as string) as Scores,
-        }));
+        }))
 
         return {
             progress: progressList as ProgressItem[],
