@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role String
+  @@map("accounts")
+}
+
+model Student {
+  id              Int            @id @default(autoincrement())
+  email           String         @unique
+  name            String
+  parentName      String
+  contact         String
+  age             Int
+  grade           String
+  className       String
+  teacher         String
+  totalSessions   Int
+  attended        Int
+  fee             String
+  scheduleItems   ScheduleItem[]
+  yearlySchedules YearlySchedule[]
+  progresses      Progress[]
+  evaluations     Evaluation[]
+
+  @@map("student")
+}
+
+model ScheduleItem {
+  id              Int      @id @default(autoincrement())
+  day             String
+  time            String
+  subject         String
+  location        String
+  student         Student  @relation(fields: [studentEmail], references: [email])
+  studentEmail    String
+  @@map("schedule_item")
+}
+
+model YearlySchedule {
+  id              Int             @id @default(autoincrement())
+  year            Int
+  student         Student         @relation(fields: [studentEmail], references: [email])
+  studentEmail    String
+  monthlyData     MonthlyData[]
+
+  @@unique([studentEmail, year])
+  @@map("yearly_schedule")
+}
+
+model MonthlyData {
+  id              Int            @id @default(autoincrement())
+  month           String
+  attended        Int
+  days            Int[]
+  yearlySchedule  YearlySchedule @relation(fields: [yearlyScheduleId], references: [id])
+  yearlyScheduleId Int
+  @@map("monthly_data")
+}
+
+model Progress {
+  id              Int      @id @default(autoincrement())
+  date            DateTime
+  type            String
+  title           String
+  description     String
+  student         Student  @relation(fields: [studentEmail], references: [email])
+  studentEmail    String
+  @@map("progress")
+}
+
+
+model Evaluation {
+  id              Int      @id @default(autoincrement())
+  date            DateTime
+  label           String
+  scores          Json
+  student         Student  @relation(fields: [studentEmail], references: [email])
+  studentEmail    String
+  @@map("evaluation")
+}

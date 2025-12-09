@@ -37,23 +37,5 @@
                 ]
             }
         ]
-    },
-    {
-        "email": "anan@gmail.com",
-        "yearlyData": [
-            {
-                "year": 2025,
-                "monthlyData": [
-                    {
-                        "month": "4",
-                        "attended": 2,
-                        "days": [
-                            22,
-                            26
-                        ]
-                    }
-                ]
-            }
-        ]
     }
 ]

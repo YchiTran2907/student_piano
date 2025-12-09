@@ -1,14 +1,43 @@
-import DashboardClient from "@/components/dashboardClient";
+import DashboardLayout from "@/components/dashboardClient";
+import Personal from "@/components/dashboardContent/Personal";
+import Progress from "@/components/dashboardContent/Progress";
+import Schedule from "@/components/dashboardContent/Schedule";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+const ComingSoonContent = (title: string) => (
+    <div className="p-8 bg-white rounded-xl shadow-lg h-[50vh] flex flex-col justify-center items-center">
+        <h2 className="text-3xl font-bold text-gray-700 mb-4">{title}</h2>
+        <p className="text-gray-500">Tính năng {title} sẽ được cập nhật sớm. Vui lòng quay lại sau!</p>
+    </div>
+);
 
 export default async function StudentsDashboard() {
     const cookieStore = cookies();
     const loggedIn = (await cookieStore).get("loggedIn");
-    const userEmail = (await cookieStore).get("userEmail");
-    if (!loggedIn || loggedIn.value !== "true") {
+    const userEmailCookie = (await cookieStore).get("userEmail");
+
+    if (!loggedIn || loggedIn.value !== "true" || !userEmailCookie || !userEmailCookie.value) {
         redirect("/login");
     }
 
-    return <DashboardClient userEmail={userEmail?.value || ""} />;
+    const userEmail = userEmailCookie.value;
+    const personalContent = <Personal userEmail={userEmail} />;
+    const scheduleContent = <Schedule userEmail={userEmail} />;
+    const progressContent = <Progress userEmail={userEmail} />;
+
+    const performanceContent = ComingSoonContent("Giải thưởng");
+    const attendanceContent = ComingSoonContent("Lịch biểu diễn");
+    const notesContent = ComingSoonContent("Nhận xét");
+
+    return (
+        <DashboardLayout
+            personalContent={personalContent}
+            scheduleContent={scheduleContent}
+            progressContent={progressContent}
+            performanceContent={performanceContent}
+            attendanceContent={attendanceContent}
+            notesContent={notesContent}
+        />
+    );
 }
