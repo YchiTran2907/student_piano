@@ -120,10 +120,10 @@ export async function getProgressDataByEmail(email: string): Promise<ProgressAnd
             orderBy: { date: 'desc' },
         });
 
-        const evaluations = evaluationList.map((e: PrismaEvaluation) => ({
+        const evaluations = evaluationList.map((e: any) => ({
             ...e,
             scores: JSON.parse(e.scores as string) as Scores,
-        }))
+        }));
 
         return {
             progress: progressList as ProgressItem[],
