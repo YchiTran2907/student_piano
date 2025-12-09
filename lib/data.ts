@@ -119,10 +119,12 @@ export async function getProgressDataByEmail(email: string): Promise<ProgressAnd
             orderBy: { date: 'desc' },
         });
 
-        const evaluations = evaluationList.map(e => ({
-            ...e,
-            scores: JSON.parse(e.scores as string) as Scores,
-        }));
+        const evaluations = evaluationList.map(
+            (e: (typeof evaluationList)[number]) => ({
+                ...e,
+                scores: JSON.parse(e.scores as string) as Scores,
+            })
+        );
 
         return {
             progress: progressList as ProgressItem[],
