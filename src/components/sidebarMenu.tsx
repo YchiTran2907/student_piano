@@ -1,8 +1,9 @@
 // app/components/SidebarMenu.tsx
 'use client';
 
-import { User, Calendar, BarChart3, FileText, DollarSign, Trophy , X } from 'lucide-react';
-import React from 'react';
+import { logoutAction } from '@/app/login/actions';
+import { User, Calendar, BarChart3, FileText, DollarSign, Trophy, X, LogOut } from 'lucide-react';
+import React, { useTransition } from 'react';
 
 export type MenuOption =
     | 'Personal'
@@ -45,6 +46,13 @@ export default function SidebarMenu({
         ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         sm:translate-x-0
     `;
+
+    const [isPending, startTransition] = useTransition();
+    const handleLogout = () => {
+        startTransition(async () => {
+            await logoutAction();
+        });
+    };
 
     return (
         <aside className={sidebarClasses}>
@@ -100,9 +108,28 @@ export default function SidebarMenu({
             </nav>
 
             {/* FOOTER */}
-            <div className="px-5 py-4 border-t border-emerald-700/60 text-xs text-emerald-300 flex-shrink-0">
-                © {new Date().getFullYear()} Student System
+            <div className="px-4 py-4 border-t border-emerald-700/60 space-y-2">
+                <button
+                    onClick={handleLogout}
+                    disabled={isPending}
+                    className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm
+                    text-emerald-100 hover:bg-red-500/20 transition
+                    disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/20 text-red-300 group-hover:bg-red-500 group-hover:text-white transition">
+                        <LogOut size={18} />
+                    </div>
+
+                    <span className="font-medium">
+                        {isPending ? 'Đang đăng xuất...' : 'Đăng xuất'}
+                    </span>
+                </button>
+
+                <div className="text-xs text-emerald-300 text-center pt-2">
+                    © {new Date().getFullYear()} Student System
+                </div>
             </div>
+
         </aside>
     );
 }

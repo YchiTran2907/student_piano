@@ -55,22 +55,36 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         m => m.yearlyScheduleId === dataLatestYear.id
     );
 
-    const { latestMonth, totalAttended } = monthlyOfLatestYear.reduce(
+    const { latestMonth } = monthlyOfLatestYear.reduce(
         (acc, cur) => {
             if (!acc.latestMonth || Number(cur.month) > Number(acc.latestMonth.month)) {
                 acc.latestMonth = cur;
             }
-            acc.totalAttended += cur.attended;
             return acc;
         },
         {
-            latestMonth: null as typeof monthlyOfLatestYear[number] | null,
-            totalAttended: 0,
+            latestMonth: null as typeof monthlyOfLatestYear[number] | null
         }
     );
 
-    const progress = Math.min(totalAttended, 8);
-    const remaining = Math.max(8 - totalAttended, 0);
+    const startDateOfMonth = new Date(latestMonth!.startDate);
+    console.log(startDateOfMonth);
+    const progress = Math.min(
+        monthlyOfLatestYear.reduce((sum, m) => {
+            const year = dataLatestYear.year;
+            const monthIndex = Number(m.month) - 1;
+
+            const validDays = m.days.filter((day) => {
+                const lessonDate = new Date(year, monthIndex, day);
+                return lessonDate >= startDateOfMonth;
+            });
+
+            return sum + validDays.length;
+        }, 0),
+        8
+    );
+
+    const remaining = Math.max(8 - progress, 0);
 
 
     return (
@@ -269,7 +283,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                     Bắt đầu tính buổi
                                 </p>
                                 <p className="font-semibold text-gray-900">
-                                    {startDate}
+                                    {new Date(startDateOfMonth).toLocaleDateString('vi-VN')}
                                 </p>
                             </div>
                         </div>
@@ -285,7 +299,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                     <div className="flex-1 h-3 rounded-full bg-emerald-200 overflow-hidden">
                                         <div
                                             className="h-full bg-emerald-600"
-                                            style={{ width: '75%' }} // 6/8
+                                            style={{ width: `${Math.min((progress / 8) * 100, 100)}%` }}
                                         />
                                     </div>
                                     <span className="text-sm font-semibold text-gray-900">

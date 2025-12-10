@@ -75,7 +75,7 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                     {formatDate(item.date)}
                                 </p>
 
-                                <p className="mt-3 text-gray-700">
+                                <p className="mt-3 text-gray-700 whitespace-pre-line">
                                     {item.description}
                                 </p>
                             </div>

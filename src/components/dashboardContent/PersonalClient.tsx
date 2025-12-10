@@ -82,8 +82,8 @@ export default function PersonalClient({
                         {student.className} · {student.grade}
                     </p>
 
-                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div className="rounded-xl bg-white/10 p-3 text-center">
+                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3 place-items-center sm:place-items-stretch">
+                        <div className="rounded-xl bg-white/10 p-3 text-center w-full sm:w-auto">
                             <p className="text-xs uppercase opacity-80">Năm</p>
                             <p className="text-lg font-bold">{lastYear}</p>
                         </div>
