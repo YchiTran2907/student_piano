@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Mail, Phone, BookOpen, GraduationCap, User, DollarSign, Calendar } from 'lucide-react';
-import { StudentData } from '../../../lib/data';
+import { StudentData, YearlySchedule } from '../../../lib/data';
 
 const InfoCard = ({
     title,
@@ -52,17 +52,19 @@ const DetailItem = ({
 
 interface PersonalClientProps {
     initialData: StudentData;
+    yearlySchedule: YearlySchedule[];
 }
 
 export default function PersonalClient({
-    initialData: student
+    initialData: student, yearlySchedule: yearlySchedule
 }: PersonalClientProps) {
     const initials = student.name
         .split(' ')
         .map((n) => n[0])
         .join('')
         .toUpperCase();
-
+    const minYear = yearlySchedule?.length ? Math.min(...yearlySchedule.map(y => y.year)) : undefined;
+    const lastYear = yearlySchedule?.length ? Math.max(...yearlySchedule.map(y => y.year)) : undefined;
     return (
         <div className="w-full space-y-6 bg-emerald-50 p-6 rounded-3xl">
 
@@ -82,22 +84,8 @@ export default function PersonalClient({
 
                     <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <div className="rounded-xl bg-white/10 p-3 text-center">
-                            <p className="text-xs uppercase opacity-80">Tổng buổi</p>
-                            <p className="text-lg font-bold">{student.totalSessions}</p>
-                        </div>
-                        <div className="rounded-xl bg-white/10 p-3 text-center">
-                            <p className="text-xs uppercase opacity-80">Đã học</p>
-                            <p className="text-lg font-bold">{student.attended}</p>
-                        </div>
-                        <div className="rounded-xl bg-white/10 p-3 text-center">
-                            <p className="text-xs uppercase opacity-80">Còn lại</p>
-                            <p className="text-lg font-bold">
-                                {student.totalSessions - student.attended}
-                            </p>
-                        </div>
-                        <div className="rounded-xl bg-white/10 p-3 text-center">
-                            <p className="text-xs uppercase opacity-80">Học phí</p>
-                            <p className="text-sm font-semibold">{student.fee}</p>
+                            <p className="text-xs uppercase opacity-80">Năm</p>
+                            <p className="text-lg font-bold">{lastYear}</p>
                         </div>
                     </div>
                 </div>
@@ -131,12 +119,8 @@ export default function PersonalClient({
                 <InfoCard title="Buổi học (Tổng quan)">
                     <div className="grid grid-cols-2 gap-3">
                         <DetailItem label="Số buổi đăng ký" value={student.totalSessions} Icon={Calendar} />
-                        <DetailItem label="Đã học" value={student.attended} Icon={Calendar} />
-                        <DetailItem
-                            label="Còn lại"
-                            value={student.totalSessions - student.attended}
-                            Icon={Calendar}
-                        />
+                        <DetailItem label="Tổng số năm đã học" value={yearlySchedule?.length || 0} Icon={Calendar} />
+                        <DetailItem label="Năm bắt đầu học" value={minYear ?? "-"} Icon={Calendar} />
                     </div>
                 </InfoCard>
             </div>

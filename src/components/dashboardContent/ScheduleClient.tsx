@@ -43,6 +43,35 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         (y) => y.year === selectedYear
     );
     const monthlyData = selectedSchedule?.monthlyData || [];
+    const startDate = new Date(monthlyData[0].startDate).toLocaleDateString('vi-VN');
+
+    // Xử lý tiến độ buổi học
+    const dataLatestYear = initialData.reduce(
+        (latest, cur) => (cur.year > latest.year ? cur : latest),
+        initialData[0]
+    );
+
+    const monthlyOfLatestYear = monthlyData.filter(
+        m => m.yearlyScheduleId === dataLatestYear.id
+    );
+
+    const { latestMonth, totalAttended } = monthlyOfLatestYear.reduce(
+        (acc, cur) => {
+            if (!acc.latestMonth || Number(cur.month) > Number(acc.latestMonth.month)) {
+                acc.latestMonth = cur;
+            }
+            acc.totalAttended += cur.attended;
+            return acc;
+        },
+        {
+            latestMonth: null as typeof monthlyOfLatestYear[number] | null,
+            totalAttended: 0,
+        }
+    );
+
+    const progress = Math.min(totalAttended, 8);
+    const remaining = Math.max(8 - totalAttended, 0);
+
 
     return (
         <section className="space-y-6">
@@ -215,6 +244,73 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                 )}
             </div>
             {/* ================= END LỊCH HỌC ================= */}
+
+            {/* ================= CHI TIẾT BUỔI HỌC ================= */}
+            <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
+                <div className="mb-6 flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                        <Calendar size={20} />
+                    </span>
+                    <h3 className="text-lg font-semibold text-emerald-800">
+                        Chi tiết buổi học
+                    </h3>
+                </div>
+
+                <div className="relative rounded-xl border border-emerald-100 bg-emerald-50 p-5">
+                    {/* Timeline line */}
+                    <div className="absolute left-6 top-6 bottom-6 w-px bg-emerald-300"></div>
+
+                    <div className="space-y-6">
+                        {/* Start date */}
+                        <div className="relative flex items-center gap-4 pl-10 mb-10">
+                            <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600"></span>
+                            <div>
+                                <p className="text-xs uppercase text-emerald-600 mb-2">
+                                    Bắt đầu tính buổi
+                                </p>
+                                <p className="font-semibold text-gray-900">
+                                    {startDate}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Progress */}
+                        <div className="relative flex items-center gap-4 pl-10 mb-10">
+                            <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600"></span>
+                            <div className="w-full">
+                                <p className="text-xs uppercase text-emerald-600 mb-2">
+                                    Tiến độ buổi học
+                                </p>
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-1 h-3 rounded-full bg-emerald-200 overflow-hidden">
+                                        <div
+                                            className="h-full bg-emerald-600"
+                                            style={{ width: '75%' }} // 6/8
+                                        />
+                                    </div>
+                                    <span className="text-sm font-semibold text-gray-900">
+                                        {progress} / 8
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Remaining */}
+                        <div className="relative flex items-center gap-4 pl-10">
+                            <span className="absolute left-3 h-3 w-3 rounded-full bg-gray-400"></span>
+                            <div>
+                                <p className="text-xs uppercase text-gray-600 mb-2">
+                                    Buổi còn lại
+                                </p>
+                                <p className="font-semibold text-gray-900">
+                                    {remaining}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* ================= END ================= */}
         </section>
     );
 }

@@ -9,18 +9,18 @@ interface DashboardLayoutProps {
     personalContent: React.ReactNode;
     scheduleContent: React.ReactNode;
     progressContent: React.ReactNode;
-    performanceContent: React.ReactNode;
-    attendanceContent: React.ReactNode;
-    notesContent: React.ReactNode;
+    achievementContent: React.ReactNode;
+    contestContent: React.ReactNode;
+    feeContent: React.ReactNode;
 }
 
 export default function DashboardLayout({
     personalContent,
     scheduleContent,
     progressContent,
-    performanceContent,
-    attendanceContent,
-    notesContent,
+    achievementContent,
+    contestContent,
+    feeContent,
 }: DashboardLayoutProps) {
     const [activeMenu, setActiveMenu] = useState<MenuOption>("Personal");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,12 +33,12 @@ export default function DashboardLayout({
                 return scheduleContent;
             case "Progress":
                 return progressContent;
-            case "Performance":
-                return performanceContent;
-            case "Attendance":
-                return attendanceContent;
-            case "Notes":
-                return notesContent;
+            case "Achievement":
+                return achievementContent;
+            case "Contest":
+                return contestContent;
+            case "Fee":
+                return feeContent;
             default:
                 return <div className="p-8 text-center text-gray-500">Nội dung không xác định.</div>;
         }

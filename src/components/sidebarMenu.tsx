@@ -1,16 +1,16 @@
 // app/components/SidebarMenu.tsx
 'use client';
 
-import { User, Calendar, BarChart3, FileText, BookOpen, ClipboardList, X } from 'lucide-react';
+import { User, Calendar, BarChart3, FileText, DollarSign, Trophy , X } from 'lucide-react';
 import React from 'react';
 
 export type MenuOption =
     | 'Personal'
     | 'Schedule'
     | 'Progress'
-    | 'Performance'
-    | 'Attendance'
-    | 'Notes';
+    | 'Achievement'
+    | 'Contest'
+    | 'Fee';
 
 interface SidebarMenuProps {
     activeMenu: MenuOption;
@@ -28,10 +28,10 @@ export default function SidebarMenu({
     const menuItems = [
         { key: 'Personal', label: 'Thông tin cá nhân', icon: User },
         { key: 'Schedule', label: 'Thời khoá biểu', icon: Calendar },
-        { key: 'Progress', label: 'Quá trình học tập', icon: BarChart3 },
-        { key: 'Performance', label: 'Giải thưởng', icon: ClipboardList },
-        { key: 'Attendance', label: 'Lịch biểu diễn', icon: FileText },
-        { key: 'Notes', label: 'Nhận xét', icon: BookOpen },
+        { key: 'Progress', label: 'Tiến độ học tập', icon: BarChart3 },
+        { key: 'Achievement', label: 'Giải thưởng', icon: Trophy },
+        { key: 'Contest', label: 'Cuộc thi', icon: FileText },
+        { key: 'Fee', label: 'Học phí', icon: DollarSign },
     ];
 
     const sidebarClasses = `

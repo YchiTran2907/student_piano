@@ -26,18 +26,18 @@ export default async function StudentsDashboard() {
     const scheduleContent = <Schedule userEmail={userEmail} />;
     const progressContent = <Progress userEmail={userEmail} />;
 
-    const performanceContent = ComingSoonContent("Giải thưởng");
-    const attendanceContent = ComingSoonContent("Lịch biểu diễn");
-    const notesContent = ComingSoonContent("Nhận xét");
+    const achievementContent = ComingSoonContent("Giải thưởng");
+    const contestContent = ComingSoonContent("Cuộc thi");
+    const feeContent = ComingSoonContent("Học phí");
 
     return (
         <DashboardLayout
             personalContent={personalContent}
             scheduleContent={scheduleContent}
             progressContent={progressContent}
-            performanceContent={performanceContent}
-            attendanceContent={attendanceContent}
-            notesContent={notesContent}
+            achievementContent={achievementContent}
+            contestContent={contestContent}
+            feeContent={feeContent}
         />
     );
 }
