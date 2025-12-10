@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Calendar } from 'lucide-react';
-import { YearlySchedule } from '../../../lib/data';
+import { YearlySchedule, ScheduleItem } from '../../../lib/data';
 
 function getMonthName(month: string): string {
     const monthNames: Record<string, string> = {
@@ -24,9 +24,10 @@ function getMonthName(month: string): string {
 
 interface ScheduleClientProps {
     initialData: YearlySchedule[];
+    scheduleItems: ScheduleItem[];
 }
 
-export default function ScheduleClient({ initialData }: ScheduleClientProps) {
+export default function ScheduleClient({ initialData, scheduleItems }: ScheduleClientProps) {
     if (initialData.length === 0) {
         return (
             <div className="rounded-2xl bg-white p-8 text-center text-gray-500 shadow">
@@ -154,6 +155,66 @@ export default function ScheduleClient({ initialData }: ScheduleClientProps) {
                     </tbody>
                 </table>
             </div>
+
+            {/* ================= LỊCH HỌC CỐ ĐỊNH ================= */}
+            <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
+                <div className="mb-4 flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                        <Calendar size={20} />
+                    </span>
+                    <h3 className="text-lg font-semibold text-emerald-800">
+                        Lịch học hàng tuần
+                    </h3>
+                </div>
+
+                {scheduleItems.length === 0 ? (
+                    <p className="text-sm text-gray-500">Chưa có lịch học.</p>
+                ) : (
+                    <div className="overflow-hidden rounded-xl border border-emerald-100">
+                        <table className="min-w-full border-collapse">
+                            <thead className="bg-emerald-50">
+                                <tr>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Thứ
+                                    </th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Giờ học
+                                    </th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Môn học
+                                    </th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Địa điểm
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody className="divide-y divide-emerald-100">
+                                {scheduleItems.map((item) => (
+                                    <tr
+                                        key={item.id}
+                                        className="transition hover:bg-emerald-50/50"
+                                    >
+                                        <td className="px-5 py-4 font-medium text-gray-900">
+                                            {item.day}
+                                        </td>
+                                        <td className="px-5 py-4 text-gray-700">
+                                            {item.time}
+                                        </td>
+                                        <td className="px-5 py-4 text-gray-700">
+                                            {item.subject}
+                                        </td>
+                                        <td className="px-5 py-4 text-gray-600">
+                                            {item.location}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+            {/* ================= END LỊCH HỌC ================= */}
         </section>
     );
 }

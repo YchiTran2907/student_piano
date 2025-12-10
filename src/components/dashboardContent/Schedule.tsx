@@ -1,6 +1,6 @@
 import React from 'react';
 import ScheduleClient from './ScheduleClient';
-import { getScheduleDataByEmail } from '../../../lib/data';
+import { getScheduleDataByEmail, getStudentDataByEmail } from '../../../lib/data';
 
 interface ScheduleProps {
     userEmail: string;
@@ -8,8 +8,12 @@ interface ScheduleProps {
 
 export default async function Schedule({ userEmail }: ScheduleProps) {
     const scheduleData = await getScheduleDataByEmail(userEmail);
+    const student = await getStudentDataByEmail(userEmail);
 
     return (
-        <ScheduleClient initialData={scheduleData} />
+        <ScheduleClient
+            initialData={scheduleData}
+            scheduleItems={student.scheduleItems}
+        />
     );
 }

@@ -14,6 +14,7 @@ export interface MonthlyAttendance {
     month: string;
     attended: number;
     days: number[];
+    startDate: Date;
 }
 
 export interface YearlySchedule {
@@ -59,7 +60,6 @@ export interface StudentData {
     fee: string;
     scheduleItems: ScheduleItem[];
 }
-
 
 export async function getStudentDataByEmail(email: string): Promise<StudentData> {
     try {
@@ -122,7 +122,7 @@ export async function getProgressDataByEmail(email: string): Promise<ProgressAnd
         const evaluations = evaluationList.map(
             (e: (typeof evaluationList)[number]) => ({
                 ...e,
-                scores: JSON.parse(e.scores as string) as Scores,
+                scores: e.scores as unknown as Scores,
             })
         );
 

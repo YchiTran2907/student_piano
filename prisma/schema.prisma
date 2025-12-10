@@ -69,6 +69,7 @@ model MonthlyData {
   month           String
   attended        Int
   days            Int[]
+  startDate       DateTime       @default(now())
   yearlySchedule  YearlySchedule @relation(fields: [yearlyScheduleId], references: [id])
   yearlyScheduleId Int
   @@map("monthly_data")

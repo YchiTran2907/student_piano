@@ -1,4 +1,3 @@
-// app/components/PersonalClient.tsx
 'use client';
 
 import React from 'react';
@@ -131,7 +130,7 @@ export default function PersonalClient({
 
                 <InfoCard title="Buổi học (Tổng quan)">
                     <div className="grid grid-cols-2 gap-3">
-                        <DetailItem label="Tổng số buổi" value={student.totalSessions} Icon={Calendar} />
+                        <DetailItem label="Số buổi đăng ký" value={student.totalSessions} Icon={Calendar} />
                         <DetailItem label="Đã học" value={student.attended} Icon={Calendar} />
                         <DetailItem
                             label="Còn lại"
