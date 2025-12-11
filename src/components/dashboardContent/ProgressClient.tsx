@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BookOpen, Target, Layers, Star } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { ProgressAndEvaluation, Scores } from '../../../lib/data';
@@ -73,40 +73,51 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100">
                     <Layers className="text-emerald-700" />
                 </span>
-                <h2 className="text-2xl font-bold text-emerald-900">
+                <h2 className="text-xl font-bold text-emerald-900">
                     Tiến độ học tập
                 </h2>
             </div>
 
             {/* ===================== PROGRESS ===================== */}
             {progress.length > 0 && (
-                <div className="space-y-10">
+                <div className="space-y-4">
                     {Object.entries(grouped).map(([title, items]) => {
-                        const firstItemType = items.length > 0 ? items[0].type : 'default';
+                        const firstItemType = items.length > 0 ? items[0].type : "default";
                         const headerIcon = getProgressIcon(firstItemType);
-                        const borderColor = colorMap[firstItemType] || colorMap['default'];
+                        const borderColor = colorMap[firstItemType] || colorMap["default"];
+
+                        const [isOpen, setIsOpen] = useState(false);
 
                         return (
-                            <div key={title} className="relative ml-4 border-l-4 border-emerald-200 pl-8">
-                                <div className={`absolute -left-6 top-0 transform -translate-y-1/2 flex items-center justify-center rounded-full bg-white border-4 shadow-lg h-10 w-10 border-${borderColor}-500`}>
-                                    {headerIcon}
+                            <div key={title} className="relative ml-4 border-l-4 border-emerald-200">
+                                <div
+                                    className="flex items-center cursor-pointer gap-4 p-4 bg-white rounded-xl shadow-sm hover:bg-emerald-50 transition"
+                                    onClick={() => setIsOpen(!isOpen)}
+                                >
+                                    <div
+                                        className={`flex items-center justify-center rounded-full bg-white border-4 h-10 w-10 border-${borderColor}-500 shadow-lg flex-shrink-0`}
+                                    >
+                                        {headerIcon}
+                                    </div>
+                                    <h3 className="text-md font-bold text-emerald-800">{title}</h3>
                                 </div>
-                                <div className="rounded-2xl bg-white border border-emerald-200 p-6 shadow-sm mb-6 mt-5 flex flex-col gap-4">
-                                    <h3 className="text-xl font-bold text-emerald-800 leading-none">{title}</h3>
 
-                                    {/* ITEMS */}
-                                    <div className="mt-4 space-y-4">
+                                {/* CONTENT */}
+                                <div
+                                    className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-[2000px] mt-2" : "max-h-0"
+                                        }`}
+                                >
+                                    <div className="rounded-2xl bg-white border border-emerald-200 p-6 shadow-sm flex flex-col gap-4">
                                         {items.map((item: any, index: number) => {
                                             const isEvaluation = item.type === "Đánh giá";
-
                                             return (
                                                 <div key={index} className="flex items-start gap-4">
-                                                    <div className={`flex-1 rounded-xl p-4 shadow-sm ml-6 w-full
-                                                        ${isEvaluation
-                                                            ? 'bg-yellow-50 border border-yellow-200 text-yellow-900'
-                                                            : 'bg-emerald-50 border border-emerald-100 text-gray-700'}`}>
-                                                        <span className={`inline-block mb-1 text-xs font-semibold uppercase px-2 py-1 rounded-full
-                                                            ${isEvaluation ? 'bg-yellow-200 text-yellow-800' : 'bg-emerald-100 text-emerald-700'}`}>
+                                                    <div
+                                                        className={`flex-1 rounded-xl p-4 shadow-sm w-full
+                                                            ${isEvaluation ? "bg-yellow-50 border border-yellow-200 text-yellow-900" : "bg-emerald-50 border border-emerald-100 text-gray-700"}`}>
+                                                        <span
+                                                            className={`inline-block mb-1 text-xs font-semibold uppercase px-2 py-1 rounded-full
+                                                            ${isEvaluation ? "bg-yellow-200 text-yellow-800" : "bg-emerald-100 text-emerald-700"}`}>
                                                             {item.type}
                                                         </span>
                                                         <p className="text-xs mt-1 text-gray-500">{formatDate(item.date)}</p>
@@ -118,7 +129,7 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                     </div>
                                 </div>
                             </div>
-                        )
+                        );
                     })}
                 </div>
             )}
