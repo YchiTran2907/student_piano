@@ -12,11 +12,11 @@ function formatDate(date: Date) {
 const getProgressIcon = (type: string) => {
     switch (type) {
         case 'Mục tiêu':
-            return <Target className="text-red-500" size={18} />;
+            return <Target className="text-red-500" size={16} />;
         case 'Bài học':
-            return <BookOpen className="text-emerald-600" size={18} />;
+            return <BookOpen className="text-emerald-600" size={16} />;
         default:
-            return <Layers className="text-gray-500" size={18} />;
+            return <Layers className="text-gray-500" size={16} />;
     }
 };
 
@@ -37,6 +37,34 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
         );
     }
 
+    // Gom progress theo title
+    const grouped = progress.reduce((acc: Record<string, any[]>, item) => {
+        if (!acc[item.title]) acc[item.title] = [];
+        acc[item.title].push(item);
+        return acc;
+    }, {});
+
+    const priority: Record<'Bài học' | 'Mục tiêu', number> = {
+        "Bài học": 2,
+        "Mục tiêu": 1
+    };
+
+    Object.keys(grouped).forEach(title => {
+        const key = title as keyof typeof grouped;
+        grouped[key].sort((a: any, b: any) => {
+            const typeA = a.type as keyof typeof priority;
+            const typeB = b.type as keyof typeof priority;
+            return priority[typeA] - priority[typeB];
+        });
+    });
+
+    const colorMap: Record<string, string> = {
+        'Bài học': 'emerald',
+        'Mục tiêu': 'red',
+        'Đánh giá': 'yellow',
+        'default': 'gray'
+    };
+
     return (
         <section className="space-y-12">
 
@@ -52,35 +80,46 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
 
             {/* ===================== PROGRESS ===================== */}
             {progress.length > 0 && (
-                <div className="relative ml-4 border-l-4 border-emerald-200 pl-8">
-                    {progress.map((item, index) => (
-                        <div key={index} className="mb-10 relative">
+                <div className="space-y-10">
+                    {Object.entries(grouped).map(([title, items]) => {
+                        const firstItemType = items.length > 0 ? items[0].type : 'default';
+                        const headerIcon = getProgressIcon(firstItemType);
+                        const borderColor = colorMap[firstItemType] || colorMap['default'];
 
-                            {/* DOT */}
-                            <div className="absolute -left-12 top-1 flex h-9 w-9 items-center justify-center rounded-full bg-white border-4 border-emerald-500 shadow">
-                                {getProgressIcon(item.type)}
+                        return (
+                            <div key={title} className="relative ml-4 border-l-4 border-emerald-200 pl-8">
+                                <div className={`absolute -left-6 top-0 transform -translate-y-1/2 flex items-center justify-center rounded-full bg-white border-4 shadow-lg h-10 w-10 border-${borderColor}-500`}>
+                                    {headerIcon}
+                                </div>
+                                <div className="rounded-2xl bg-white border border-emerald-200 p-6 shadow-sm mb-6 mt-5 flex flex-col gap-4">
+                                    <h3 className="text-xl font-bold text-emerald-800 leading-none">{title}</h3>
+
+                                    {/* ITEMS */}
+                                    <div className="mt-4 space-y-4">
+                                        {items.map((item: any, index: number) => {
+                                            const isEvaluation = item.type === "Đánh giá";
+
+                                            return (
+                                                <div key={index} className="flex items-start gap-4">
+                                                    <div className={`flex-1 rounded-xl p-4 shadow-sm ml-6 w-full
+                                                        ${isEvaluation
+                                                            ? 'bg-yellow-50 border border-yellow-200 text-yellow-900'
+                                                            : 'bg-emerald-50 border border-emerald-100 text-gray-700'}`}>
+                                                        <span className={`inline-block mb-1 text-xs font-semibold uppercase px-2 py-1 rounded-full
+                                                            ${isEvaluation ? 'bg-yellow-200 text-yellow-800' : 'bg-emerald-100 text-emerald-700'}`}>
+                                                            {item.type}
+                                                        </span>
+                                                        <p className="text-xs mt-1 text-gray-500">{formatDate(item.date)}</p>
+                                                        <p className="mt-1 whitespace-pre-line">{item.description}</p>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
-
-                            {/* CARD */}
-                            <div className="rounded-2xl bg-white border border-emerald-100 p-5 shadow-sm hover:shadow-md transition">
-                                <span className="inline-block mb-2 text-xs font-semibold uppercase text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
-                                    {item.type}
-                                </span>
-
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                    {item.title}
-                                </h3>
-
-                                <p className="text-xs text-gray-500 mt-1">
-                                    {formatDate(item.date)}
-                                </p>
-
-                                <p className="mt-3 text-gray-700 whitespace-pre-line">
-                                    {item.description}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             )}
 

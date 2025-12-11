@@ -82,7 +82,6 @@ export async function getStudentDataByEmail(email: string): Promise<StudentData>
     }
 }
 
-
 export async function getScheduleDataByEmail(email: string): Promise<YearlySchedule[]> {
     try {
         const yearlySchedules = await prisma.yearlySchedule.findMany({
@@ -100,7 +99,6 @@ export async function getScheduleDataByEmail(email: string): Promise<YearlySched
         throw new Error('Failed to fetch schedule data.');
     }
 }
-
 
 export interface ProgressAndEvaluation {
     progress: ProgressItem[];
