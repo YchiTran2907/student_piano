@@ -67,7 +67,6 @@ model YearlySchedule {
 model MonthlyData {
   id              Int            @id @default(autoincrement())
   month           String
-  attended        Int
   days            Int[]
   startDate       DateTime       @default(now())
   yearlySchedule  YearlySchedule @relation(fields: [yearlyScheduleId], references: [id])

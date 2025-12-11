@@ -43,7 +43,11 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         (y) => y.year === selectedYear
     );
     const monthlyData = selectedSchedule?.monthlyData || [];
-    const startDate = new Date(monthlyData[0].startDate).toLocaleDateString('vi-VN');
+
+    // Hàm lấy số ngày của một tháng
+    const getDaysInMonth = (year: number, monthIndex: number) => {
+        return new Date(year, monthIndex + 1, 0).getDate();
+    };
 
     // Xử lý tiến độ buổi học
     const dataLatestYear = initialData.reduce(
@@ -68,13 +72,14 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
     );
 
     const startDateOfMonth = new Date(latestMonth!.startDate);
-    console.log(startDateOfMonth);
     const progress = Math.min(
         monthlyOfLatestYear.reduce((sum, m) => {
             const year = dataLatestYear.year;
             const monthIndex = Number(m.month) - 1;
+            const maxDays = getDaysInMonth(year, monthIndex);
 
             const validDays = m.days.filter((day) => {
+                if (day > maxDays) return false;
                 const lessonDate = new Date(year, monthIndex, day);
                 return lessonDate >= startDateOfMonth;
             });
@@ -151,22 +156,26 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                     <span
                                         className={`
                                             inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold
-                                            ${month.attended > 0
+                                            ${(month.days).length > 0
                                                 ? 'bg-emerald-100 text-emerald-700'
                                                 : 'bg-red-100 text-red-600'
                                             }
                                         `}
                                     >
-                                        {month.attended}
+                                        {(month.days).length}
                                     </span>
                                 </td>
 
                                 <td className="px-6 py-5">
                                     <div className="flex flex-wrap gap-2 max-w-[520px]">
-                                        {Array.from({ length: 31 }, (_, i) => i + 1).map(
-                                            (day) => {
-                                                const isAttended =
-                                                    month.days.includes(day);
+
+                                        {(() => {
+                                            const year = dataLatestYear.year;
+                                            const monthIndex = Number(month.month) - 1;
+                                            const daysInMonth = getDaysInMonth(year, monthIndex);
+
+                                            return Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
+                                                const isAttended = month.days.includes(day);
 
                                                 return (
                                                     <span
@@ -176,23 +185,20 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                                                 ? `Ngày ${day}: Đã tham dự`
                                                                 : `Ngày ${day}: Vắng`
                                                         }
-                                                        className={`
-                                                            flex h-8 w-8 items-center justify-center
-                                                            rounded-full text-xs font-semibold
-                                                            transition
+                                                        className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition
                                                             ${isAttended
                                                                 ? 'bg-emerald-600 text-white'
                                                                 : 'bg-gray-100 text-gray-400'
-                                                            }
-                                                        `}
-                                                    >
+                                                            }`}>
                                                         {day}
                                                     </span>
                                                 );
-                                            }
-                                        )}
+                                            });
+                                        })()}
+
                                     </div>
                                 </td>
+
                             </tr>
                         ))}
                     </tbody>
