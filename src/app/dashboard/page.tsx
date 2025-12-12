@@ -5,6 +5,7 @@ import Schedule from "@/components/dashboardContent/Schedule";
 import Attendance from "@/components/dashboardContent/Attendance";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getAccountDataByEmail } from "../../../lib/data";
 
 const ComingSoonContent = (title: string) => (
     <div className="p-8 bg-white rounded-xl shadow-lg h-[50vh] flex flex-col justify-center items-center">
@@ -23,7 +24,12 @@ export default async function StudentsDashboard() {
     }
 
     const userEmail = userEmailCookie.value;
-    const personalContent = <Personal userEmail={userEmail} />;
+
+    // Kiểm tra quyền người dùng
+    const accountData = await getAccountDataByEmail(userEmail);
+    const roleUser = accountData.role;
+
+    const personalContent = <Personal userEmail={userEmail} roleUser={roleUser} />;
     const scheduleContent = <Schedule userEmail={userEmail} />;
     const progressContent = <Progress userEmail={userEmail} />;
 
@@ -34,6 +40,7 @@ export default async function StudentsDashboard() {
 
     return (
         <DashboardLayout
+            roleUser={roleUser}
             personalContent={personalContent}
             scheduleContent={scheduleContent}
             progressContent={progressContent}

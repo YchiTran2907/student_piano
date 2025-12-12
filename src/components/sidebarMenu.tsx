@@ -14,6 +14,7 @@ export type MenuOption =
     | 'Attendance';
 
 interface SidebarMenuProps {
+    roleUser: string;
     activeMenu: MenuOption;
     onChange: (menu: MenuOption) => void;
     isMenuOpen: boolean;
@@ -21,19 +22,20 @@ interface SidebarMenuProps {
 }
 
 export default function SidebarMenu({
+    roleUser,
     activeMenu,
     onChange,
     isMenuOpen,
     onClose,
 }: SidebarMenuProps) {
     const menuItems = [
-        { key: 'Personal', label: 'Thông tin cá nhân', icon: User },
-        { key: 'Schedule', label: 'Thời khoá biểu', icon: Calendar },
-        { key: 'Progress', label: 'Tiến độ học tập', icon: BarChart3 },
-        { key: 'Achievement', label: 'Giải thưởng', icon: Trophy },
-        { key: 'Contest', label: 'Cuộc thi', icon: FileText },
-        { key: 'Fee', label: 'Học phí', icon: DollarSign },
-        { key: 'Attendance', label: 'Điểm danh', icon: CalendarCheck },
+        { key: 'Personal', label: 'Thông tin cá nhân', icon: User, roles: ['Teacher Admin', 'Student'] },
+        { key: 'Schedule', label: 'Thời khoá biểu', icon: Calendar, roles: ['Teacher Admin', 'Student'] },
+        { key: 'Progress', label: 'Tiến độ học tập', icon: BarChart3, roles: ['Teacher Admin', 'Student'] },
+        { key: 'Achievement', label: 'Giải thưởng', icon: Trophy, roles: ['Teacher Admin', 'Student'] },
+        { key: 'Contest', label: 'Cuộc thi', icon: FileText, roles: ['Teacher Admin', 'Student'] },
+        { key: 'Fee', label: 'Học phí', icon: DollarSign, roles: ['Teacher Admin', 'Student'] },
+        { key: 'Attendance', label: 'Điểm danh', icon: CalendarCheck, roles: ['Teacher Admin'] },
     ];
 
     const sidebarClasses = `
@@ -47,6 +49,10 @@ export default function SidebarMenu({
         ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         sm:translate-x-0
     `;
+
+    const filteredMenuItems = menuItems.filter(item =>
+        item.roles.includes(roleUser)
+    );
 
     const [isPending, startTransition] = useTransition();
     const handleLogout = () => {
@@ -79,7 +85,7 @@ export default function SidebarMenu({
 
             {/* MENU – FULL HEIGHT */}
             <nav className="flex-1 overflow-y-auto px-3 space-y-1">
-                {menuItems.map((item) => {
+                {filteredMenuItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = activeMenu === item.key;
 

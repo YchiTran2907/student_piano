@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Mail, Phone, BookOpen, GraduationCap, User, DollarSign, Calendar } from 'lucide-react';
-import { Accounts, StudentData, YearlySchedule } from '../../../lib/data';
+import { StudentData, YearlySchedule } from '../../../lib/data';
 
 const InfoCard = ({
     title,
@@ -53,11 +53,11 @@ const DetailItem = ({
 interface PersonalClientProps {
     initialData: StudentData;
     yearlySchedule: YearlySchedule[];
-    accountData: Accounts;
+    roleUser: string
 }
 
 export default function PersonalClient({
-    initialData: student, yearlySchedule: yearlySchedule, accountData: accountData
+    initialData: student, yearlySchedule: yearlySchedule, roleUser: roleUser
 }: PersonalClientProps) {
     const initials = student.name
         .split(' ')
@@ -90,7 +90,7 @@ export default function PersonalClient({
                         </div>
                         <div className="rounded-xl bg-white/10 p-3 text-center w-full sm:w-auto">
                             <p className="text-xs uppercase opacity-80">Vai trò</p>
-                            <p className="text-lg font-bold">{accountData.role}</p>
+                            <p className="text-lg font-bold">{roleUser}</p>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import { Menu } from 'lucide-react';
 import SidebarMenu, { MenuOption } from './sidebarMenu';
 
 interface DashboardLayoutProps {
+    roleUser: string;
     personalContent: React.ReactNode;
     scheduleContent: React.ReactNode;
     progressContent: React.ReactNode;
@@ -16,6 +17,7 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({
+    roleUser,
     personalContent,
     scheduleContent,
     progressContent,
@@ -51,6 +53,7 @@ export default function DashboardLayout({
     return (
         <div className="flex min-h-screen bg-gray-50">
             <SidebarMenu
+                roleUser={roleUser}
                 activeMenu={activeMenu}
                 onChange={setActiveMenu}
                 isMenuOpen={isMenuOpen}
