@@ -12,6 +12,7 @@ interface DashboardLayoutProps {
     achievementContent: React.ReactNode;
     contestContent: React.ReactNode;
     feeContent: React.ReactNode;
+    attendanceContent: React.ReactNode;
 }
 
 export default function DashboardLayout({
@@ -21,6 +22,7 @@ export default function DashboardLayout({
     achievementContent,
     contestContent,
     feeContent,
+    attendanceContent,
 }: DashboardLayoutProps) {
     const [activeMenu, setActiveMenu] = useState<MenuOption>("Personal");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,6 +41,8 @@ export default function DashboardLayout({
                 return contestContent;
             case "Fee":
                 return feeContent;
+            case "Attendance":
+                return attendanceContent;
             default:
                 return <div className="p-8 text-center text-gray-500">Nội dung không xác định.</div>;
         }

@@ -1,6 +1,13 @@
 import prisma from './prisma';
 import { notFound } from 'next/navigation';
 
+export interface Accounts {
+    id: number;
+    email: string;
+    password: string;
+    role: string;
+}
+
 export interface ScheduleItem {
     id: number;
     day: string;
@@ -59,6 +66,24 @@ export interface StudentData {
     attended: number;
     fee: string;
     scheduleItems: ScheduleItem[];
+}
+
+export async function getAccountDataByEmail(email: string): Promise<Accounts> {
+    try {
+        const role = await prisma.account.findUnique({
+            where: { email }
+        });
+
+        if (!role) {
+            notFound();
+        }
+
+        return role as Accounts;
+
+    } catch (error) {
+        console.error('DATABASE ERROR: Failed to fetch Account data.', error);
+        throw new Error('Failed to fetch Account data.');
+    }
 }
 
 export async function getStudentDataByEmail(email: string): Promise<StudentData> {

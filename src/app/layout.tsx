@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dashboard Piano Student",
+  title: "Piano Student by YChiTQ",
   description: "Manager by YChiTQ",
 };
 

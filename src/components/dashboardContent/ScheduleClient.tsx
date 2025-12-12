@@ -71,7 +71,9 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         }
     );
 
-    const startDateOfMonth = new Date(latestMonth!.startDate);
+    const normalizeDate = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const rawStartDate = new Date(latestMonth!.startDate);
+    const startDateOfMonth = normalizeDate(rawStartDate);
     const progress = Math.min(
         monthlyOfLatestYear.reduce((sum, m) => {
             const year = dataLatestYear.year;
@@ -80,13 +82,12 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
 
             const validDays = m.days.filter((day) => {
                 if (day > maxDays) return false;
-                const lessonDate = new Date(year, monthIndex, day);
+                const lessonDate = normalizeDate(new Date(year, monthIndex, day));
                 return lessonDate >= startDateOfMonth;
             });
 
             return sum + validDays.length;
-        }, 0),
-        8
+        }, 0), 8
     );
 
     const remaining = Math.max(8 - progress, 0);

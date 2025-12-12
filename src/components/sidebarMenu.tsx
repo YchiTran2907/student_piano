@@ -1,8 +1,7 @@
-// app/components/SidebarMenu.tsx
 'use client';
 
 import { logoutAction } from '@/app/login/actions';
-import { User, Calendar, BarChart3, FileText, DollarSign, Trophy, X, LogOut } from 'lucide-react';
+import { User, Calendar, BarChart3, FileText, DollarSign, Trophy, X, LogOut, CalendarCheck } from 'lucide-react';
 import React, { useTransition } from 'react';
 
 export type MenuOption =
@@ -11,7 +10,8 @@ export type MenuOption =
     | 'Progress'
     | 'Achievement'
     | 'Contest'
-    | 'Fee';
+    | 'Fee'
+    | 'Attendance';
 
 interface SidebarMenuProps {
     activeMenu: MenuOption;
@@ -33,6 +33,7 @@ export default function SidebarMenu({
         { key: 'Achievement', label: 'Giải thưởng', icon: Trophy },
         { key: 'Contest', label: 'Cuộc thi', icon: FileText },
         { key: 'Fee', label: 'Học phí', icon: DollarSign },
+        { key: 'Attendance', label: 'Điểm danh', icon: CalendarCheck },
     ];
 
     const sidebarClasses = `

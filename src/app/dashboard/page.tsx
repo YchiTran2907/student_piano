@@ -2,6 +2,7 @@ import DashboardLayout from "@/components/dashboardClient";
 import Personal from "@/components/dashboardContent/Personal";
 import Progress from "@/components/dashboardContent/Progress";
 import Schedule from "@/components/dashboardContent/Schedule";
+import Attendance from "@/components/dashboardContent/Attendance";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -29,6 +30,7 @@ export default async function StudentsDashboard() {
     const achievementContent = ComingSoonContent("Giải thưởng");
     const contestContent = ComingSoonContent("Cuộc thi");
     const feeContent = ComingSoonContent("Học phí");
+    const attendanceContent = <Attendance />
 
     return (
         <DashboardLayout
@@ -38,6 +40,7 @@ export default async function StudentsDashboard() {
             achievementContent={achievementContent}
             contestContent={contestContent}
             feeContent={feeContent}
+            attendanceContent={attendanceContent}
         />
     );
 }
