@@ -71,9 +71,22 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         }
     );
 
-    const normalizeDate = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    const rawStartDate = new Date(latestMonth!.startDate);
-    const startDateOfMonth = normalizeDate(rawStartDate);
+    const normalizeDate = (d: Date) =>
+        new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+    const startDateOfMonth = (() => {
+        if (latestMonth?.startDate) {
+            return normalizeDate(new Date(latestMonth.startDate));
+        }
+
+        if (latestMonth) {
+            const year = dataLatestYear.year;
+            const monthIndex = Number(latestMonth.month) - 1;
+            return new Date(year, monthIndex, 1);
+        }
+        return normalizeDate(new Date());
+    })();
+
     const progress = Math.min(
         monthlyOfLatestYear.reduce((sum, m) => {
             const year = dataLatestYear.year;

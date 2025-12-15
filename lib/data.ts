@@ -162,19 +162,35 @@ export async function getProgressDataByEmail(email: string): Promise<ProgressAnd
 
 export async function getAllStudents(): Promise<StudentData[]> {
     try {
+        const adminAccounts = await prisma.account.findMany({
+            where: {
+                role: "Admin",
+            },
+            select: {
+                email: true,
+            },
+        });
+
+        const adminEmails = adminAccounts.map((a) => a.email);
+
         const students = await prisma.student.findMany({
+            where: {
+                email: {
+                    notIn: adminEmails,
+                },
+            },
             include: {
                 scheduleItems: true,
             },
             orderBy: {
-                id: 'asc',
+                id: "asc",
             },
         });
 
         return students as StudentData[];
-
     } catch (error) {
-        console.error('DATABASE ERROR: Failed to fetch all students.', error);
-        throw new Error('Failed to fetch all students.');
+        console.error("DATABASE ERROR: Failed to fetch all students.", error);
+        throw new Error("Failed to fetch all students.");
     }
 }
+
