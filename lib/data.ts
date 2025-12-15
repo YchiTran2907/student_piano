@@ -159,3 +159,22 @@ export async function getProgressDataByEmail(email: string): Promise<ProgressAnd
         throw new Error('Failed to fetch progress data.');
     }
 }
+
+export async function getAllStudents(): Promise<StudentData[]> {
+    try {
+        const students = await prisma.student.findMany({
+            include: {
+                scheduleItems: true,
+            },
+            orderBy: {
+                id: 'asc',
+            },
+        });
+
+        return students as StudentData[];
+
+    } catch (error) {
+        console.error('DATABASE ERROR: Failed to fetch all students.', error);
+        throw new Error('Failed to fetch all students.');
+    }
+}

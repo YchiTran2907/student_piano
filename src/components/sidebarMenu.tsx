@@ -29,13 +29,13 @@ export default function SidebarMenu({
     onClose,
 }: SidebarMenuProps) {
     const menuItems = [
-        { key: 'Personal', label: 'Thông tin cá nhân', icon: User, roles: ['Teacher Admin', 'Student'] },
-        { key: 'Schedule', label: 'Thời khoá biểu', icon: Calendar, roles: ['Teacher Admin', 'Student'] },
-        { key: 'Progress', label: 'Tiến độ học tập', icon: BarChart3, roles: ['Teacher Admin', 'Student'] },
-        { key: 'Achievement', label: 'Giải thưởng', icon: Trophy, roles: ['Teacher Admin', 'Student'] },
-        { key: 'Contest', label: 'Cuộc thi', icon: FileText, roles: ['Teacher Admin', 'Student'] },
-        { key: 'Fee', label: 'Học phí', icon: DollarSign, roles: ['Teacher Admin', 'Student'] },
-        { key: 'Attendance', label: 'Điểm danh', icon: CalendarCheck, roles: ['Teacher Admin'] },
+        { key: 'Personal', label: 'Thông tin cá nhân', icon: User, roles: ['Admin', 'Student'] },
+        { key: 'Schedule', label: 'Thời khoá biểu', icon: Calendar, roles: ['Admin', 'Student'] },
+        { key: 'Progress', label: 'Tiến độ học tập', icon: BarChart3, roles: ['Admin', 'Student'] },
+        { key: 'Achievement', label: 'Giải thưởng', icon: Trophy, roles: ['Admin', 'Student'] },
+        { key: 'Contest', label: 'Cuộc thi', icon: FileText, roles: ['Admin', 'Student'] },
+        { key: 'Fee', label: 'Học phí', icon: DollarSign, roles: ['Admin', 'Student'] },
+        { key: 'Attendance', label: 'Điểm danh', icon: CalendarCheck, roles: ['Admin'] },
     ];
 
     const sidebarClasses = `
