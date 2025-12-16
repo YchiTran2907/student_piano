@@ -7,14 +7,18 @@ interface AchievementProps {
 
 export default async function Achievement({ userEmail }: AchievementProps) {
     const studentData = await getStudentDataByEmail(userEmail);
-    const awards = studentData.awards;
+
+    const awards = [...studentData.awards].sort(
+        (a, b) => b.year - a.year
+    );
 
     const allStudents = await getAllStudents();
     const classAwards: Award[] = allStudents
-        .flatMap(student => student.awards);
+        .flatMap((student) => student.awards)
+        .sort((a, b) => b.year - a.year);
 
     const studentNameMap: Record<string, string> = {};
-    allStudents.forEach(s => {
+    allStudents.forEach((s) => {
         studentNameMap[s.email] = s.name;
     });
 
@@ -27,3 +31,4 @@ export default async function Achievement({ userEmail }: AchievementProps) {
         />
     );
 }
+

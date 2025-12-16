@@ -123,9 +123,6 @@ export default function AchievementClient({ awards, studentName, classAwards, st
                         <h2 className="text-2xl font-bold text-slate-800">
                             Thành tích chung của lớp
                         </h2>
-                        <p className="text-sm text-gray-600">
-                            Tổng hợp các giải thưởng của các học sinh trong lớp
-                        </p>
                     </div>
                 </div>
 
