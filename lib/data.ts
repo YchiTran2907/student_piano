@@ -18,7 +18,7 @@ export interface ScheduleItem {
 
 export interface MonthlyAttendance {
     id: number;
-    month: string;
+    month: number;
     days: number[];
     startDate: Date;
     yearlyScheduleId: number;

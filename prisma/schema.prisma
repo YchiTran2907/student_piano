@@ -38,6 +38,7 @@ model Student {
   yearlySchedules YearlySchedule[]
   progresses      Progress[]
   evaluations     Evaluation[]
+  awards          Award[]
 
   @@map("student")
 }
@@ -66,7 +67,7 @@ model YearlySchedule {
 
 model MonthlyData {
   id              Int            @id @default(autoincrement())
-  month           String
+  month           Int
   days            Int[]
   startDate       DateTime       @default(now())
   yearlySchedule  YearlySchedule @relation(fields: [yearlyScheduleId], references: [id])
@@ -94,4 +95,17 @@ model Evaluation {
   student         Student  @relation(fields: [studentEmail], references: [email])
   studentEmail    String
   @@map("evaluation")
+}
+
+model Award {
+  id            Int      @id @default(autoincrement())
+  title         String
+  prize         String
+  level         String
+  year          Int
+  studentEmail  String
+  student       Student  @relation(fields: [studentEmail], references: [email])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  @@map("award")
 }

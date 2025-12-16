@@ -97,11 +97,7 @@ export default function AttendanceClient({ dataAllStudents }: AttendanceClientPr
                                         ${isLoading ? "opacity-60" : ""}
                                     `}
                                 >
-                                    {isLoading
-                                        ? "Đang xử lý..."
-                                        : isChecked
-                                            ? "Đã điểm danh"
-                                            : "Điểm danh"}
+                                    {isLoading ? "Đang xử lý..." : isChecked ? "Đã điểm danh" : "Điểm danh"}
                                 </button>
                             </div>
                         </div>

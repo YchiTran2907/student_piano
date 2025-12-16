@@ -4,22 +4,22 @@ import React, { useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { YearlySchedule, ScheduleItem } from '../../../lib/data';
 
-function getMonthName(month: string): string {
-    const monthNames: Record<string, string> = {
-        Jan: 'Tháng 1',
-        Feb: 'Tháng 2',
-        Mar: 'Tháng 3',
-        Apr: 'Tháng 4',
-        May: 'Tháng 5',
-        Jun: 'Tháng 6',
-        Jul: 'Tháng 7',
-        Aug: 'Tháng 8',
-        Sep: 'Tháng 9',
-        Oct: 'Tháng 10',
-        Nov: 'Tháng 11',
-        Dec: 'Tháng 12',
-    };
-    return monthNames[month] || month;
+function getMonthName(month: number): string {
+    const monthNames = [
+        "Tháng 1",
+        "Tháng 2",
+        "Tháng 3",
+        "Tháng 4",
+        "Tháng 5",
+        "Tháng 6",
+        "Tháng 7",
+        "Tháng 8",
+        "Tháng 9",
+        "Tháng 10",
+        "Tháng 11",
+        "Tháng 12",
+    ];
+    return monthNames[month - 1] || `Tháng ${month}`;
 }
 
 interface ScheduleClientProps {
@@ -61,41 +61,30 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
 
     const { latestMonth } = monthlyOfLatestYear.reduce(
         (acc, cur) => {
-            if (!acc.latestMonth || Number(cur.month) > Number(acc.latestMonth.month)) {
+            if (!acc.latestMonth || cur.month > acc.latestMonth.month) {
                 acc.latestMonth = cur;
             }
             return acc;
         },
-        {
-            latestMonth: null as typeof monthlyOfLatestYear[number] | null
-        }
+        { latestMonth: null as typeof monthlyOfLatestYear[number] | null }
     );
 
-    const normalizeDate = (d: Date) =>
-        new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const normalizeDate = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-    const startDateOfMonth = (() => {
-        if (latestMonth?.startDate) {
-            return normalizeDate(new Date(latestMonth.startDate));
-        }
-
-        if (latestMonth) {
-            const year = dataLatestYear.year;
-            const monthIndex = Number(latestMonth.month) - 1;
-            return new Date(year, monthIndex, 1);
-        }
-        return normalizeDate(new Date());
-    })();
+    const startDateOfMonth = latestMonth?.startDate
+        ? normalizeDate(new Date(latestMonth.startDate))
+        : latestMonth
+            ? new Date(dataLatestYear.year, latestMonth.month - 1, 1)
+            : normalizeDate(new Date());
 
     const progress = Math.min(
         monthlyOfLatestYear.reduce((sum, m) => {
-            const year = dataLatestYear.year;
-            const monthIndex = Number(m.month) - 1;
-            const maxDays = getDaysInMonth(year, monthIndex);
+            const monthIndex = m.month - 1;
+            const maxDays = getDaysInMonth(dataLatestYear.year, monthIndex);
 
             const validDays = m.days.filter((day) => {
                 if (day > maxDays) return false;
-                const lessonDate = normalizeDate(new Date(year, monthIndex, day));
+                const lessonDate = normalizeDate(new Date(dataLatestYear.year, monthIndex, day));
                 return lessonDate >= startDateOfMonth;
             });
 
@@ -170,13 +159,12 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                     <span
                                         className={`
                                             inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold
-                                            ${(month.days).length > 0
+                                            ${month.days.length > 0
                                                 ? 'bg-emerald-100 text-emerald-700'
-                                                : 'bg-red-100 text-red-600'
-                                            }
+                                                : 'bg-red-100 text-red-600'}
                                         `}
                                     >
-                                        {(month.days).length}
+                                        {month.days.length}
                                     </span>
                                 </td>
 
@@ -184,9 +172,8 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                     <div className="flex flex-wrap gap-2 max-w-[520px]">
 
                                         {(() => {
-                                            const year = dataLatestYear.year;
-                                            const monthIndex = Number(month.month) - 1;
-                                            const daysInMonth = getDaysInMonth(year, monthIndex);
+                                            const monthIndex = month.month - 1;
+                                            const daysInMonth = getDaysInMonth(dataLatestYear.year, monthIndex);
 
                                             return Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
                                                 const isAttended = month.days.includes(day);
@@ -194,16 +181,16 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                                 return (
                                                     <span
                                                         key={day}
-                                                        title={
-                                                            isAttended
-                                                                ? `Ngày ${day}: Đã tham dự`
-                                                                : `Ngày ${day}: Vắng`
-                                                        }
-                                                        className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition
+                                                        title={isAttended
+                                                            ? `Ngày ${day}: Đã tham dự`
+                                                            : `Ngày ${day}: Vắng`}
+                                                        className={`
+                                                            flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition
                                                             ${isAttended
                                                                 ? 'bg-emerald-600 text-white'
-                                                                : 'bg-gray-100 text-gray-400'
-                                                            }`}>
+                                                                : 'bg-gray-100 text-gray-400'}
+                                                        `}
+                                                    >
                                                         {day}
                                                     </span>
                                                 );
@@ -219,7 +206,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                 </table>
             </div>
 
-            {/* ================= LỊCH HỌC CỐ ĐỊNH ================= */}
+            {/* LỊCH HỌC HÀNG TUẦN */}
             <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
@@ -237,39 +224,20 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                         <table className="min-w-full border-collapse">
                             <thead className="bg-emerald-50">
                                 <tr>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
-                                        Thứ
-                                    </th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
-                                        Giờ học
-                                    </th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
-                                        Môn học
-                                    </th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
-                                        Địa điểm
-                                    </th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Thứ</th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Giờ học</th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Môn học</th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Địa điểm</th>
                                 </tr>
                             </thead>
 
                             <tbody className="divide-y divide-emerald-100">
                                 {scheduleItems.map((item) => (
-                                    <tr
-                                        key={item.id}
-                                        className="transition hover:bg-emerald-50/50"
-                                    >
-                                        <td className="px-5 py-4 font-medium text-gray-900">
-                                            {item.day}
-                                        </td>
-                                        <td className="px-5 py-4 text-gray-700">
-                                            {item.time}
-                                        </td>
-                                        <td className="px-5 py-4 text-gray-700">
-                                            {item.subject}
-                                        </td>
-                                        <td className="px-5 py-4 text-gray-600">
-                                            {item.location}
-                                        </td>
+                                    <tr key={item.id} className="transition hover:bg-emerald-50/50">
+                                        <td className="px-5 py-4 font-medium text-gray-900">{item.day}</td>
+                                        <td className="px-5 py-4 text-gray-700">{item.time}</td>
+                                        <td className="px-5 py-4 text-gray-700">{item.subject}</td>
+                                        <td className="px-5 py-4 text-gray-600">{item.location}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -299,12 +267,8 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                         <div className="relative flex items-center gap-4 pl-10 mb-10">
                             <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600"></span>
                             <div>
-                                <p className="text-xs uppercase text-emerald-600 mb-2">
-                                    Bắt đầu tính buổi
-                                </p>
-                                <p className="font-semibold text-gray-900">
-                                    {new Date(startDateOfMonth).toLocaleDateString('vi-VN')}
-                                </p>
+                                <p className="text-xs uppercase text-emerald-600 mb-2">Bắt đầu tính buổi</p>
+                                <p className="font-semibold text-gray-900">{startDateOfMonth.toLocaleDateString('vi-VN')}</p>
                             </div>
                         </div>
 
@@ -312,9 +276,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                         <div className="relative flex items-center gap-4 pl-10 mb-10">
                             <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600"></span>
                             <div className="w-full">
-                                <p className="text-xs uppercase text-emerald-600 mb-2">
-                                    Tiến độ buổi học
-                                </p>
+                                <p className="text-xs uppercase text-emerald-600 mb-2">Tiến độ buổi học</p>
                                 <div className="flex items-center gap-3">
                                     <div className="flex-1 h-3 rounded-full bg-emerald-200 overflow-hidden">
                                         <div
@@ -322,9 +284,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                             style={{ width: `${Math.min((progress / 8) * 100, 100)}%` }}
                                         />
                                     </div>
-                                    <span className="text-sm font-semibold text-gray-900">
-                                        {progress} / 8
-                                    </span>
+                                    <span className="text-sm font-semibold text-gray-900">{progress} / 8</span>
                                 </div>
                             </div>
                         </div>
@@ -333,12 +293,8 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                         <div className="relative flex items-center gap-4 pl-10">
                             <span className="absolute left-3 h-3 w-3 rounded-full bg-gray-400"></span>
                             <div>
-                                <p className="text-xs uppercase text-gray-600 mb-2">
-                                    Buổi còn lại
-                                </p>
-                                <p className="font-semibold text-gray-900">
-                                    {remaining}
-                                </p>
+                                <p className="text-xs uppercase text-gray-600 mb-2">Buổi còn lại</p>
+                                <p className="font-semibold text-gray-900">{remaining}</p>
                             </div>
                         </div>
                     </div>

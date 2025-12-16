@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         }
 
         const currentMonth = yearlySchedule.monthlyData.find(
-            (m) => Number(m.month) === month
+            (m) => m.month === month
         );
 
         // Trường hợp có tháng hiện tại
@@ -73,12 +73,11 @@ export async function POST(req: Request) {
         // Trường hợp chưa có tháng hiện tại
         const previousMonth = yearlySchedule.monthlyData[0];
 
-        const startDate =
-            previousMonth?.startDate ?? new Date(year, month - 1, 1);
+        const startDate = previousMonth?.startDate ?? new Date(year, month - 1, 1);
 
         const newMonthlyData = await prisma.monthlyData.create({
             data: {
-                month: String(month),
+                month,
                 days: [day],
                 startDate,
                 yearlyScheduleId: yearlySchedule.id,
@@ -94,6 +93,7 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
+        console.error("Attendance checkin error:", error);
         return NextResponse.json(
             { error: error.message ?? "Internal Server Error" },
             { status: 500 }
