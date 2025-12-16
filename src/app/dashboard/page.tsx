@@ -34,7 +34,7 @@ export default async function StudentsDashboard() {
     const scheduleContent = <Schedule userEmail={userEmail} />;
     const progressContent = <Progress userEmail={userEmail} />;
 
-    const achievementContent = <Achievement />;
+    const achievementContent = <Achievement userEmail={userEmail} />;
     const contestContent = ComingSoonContent("Cuộc thi");
     const feeContent = ComingSoonContent("Học phí");
     const attendanceContent = <Attendance />

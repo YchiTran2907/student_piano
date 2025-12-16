@@ -1,10 +1,29 @@
-import React from 'react';
-import AchievementClient from './AchievementClient';
+import AchievementClient from "./AchievementClient";
+import { getStudentDataByEmail, getAllStudents, Award } from "../../../lib/data";
 
+interface AchievementProps {
+    userEmail: string;
+}
 
-export default async function Achievement() {
+export default async function Achievement({ userEmail }: AchievementProps) {
+    const studentData = await getStudentDataByEmail(userEmail);
+    const awards = studentData.awards;
+
+    const allStudents = await getAllStudents();
+    const classAwards: Award[] = allStudents
+        .flatMap(student => student.awards);
+
+    const studentNameMap: Record<string, string> = {};
+    allStudents.forEach(s => {
+        studentNameMap[s.email] = s.name;
+    });
 
     return (
-        <AchievementClient />
+        <AchievementClient
+            awards={awards}
+            studentName={studentData.name}
+            classAwards={classAwards}
+            studentNameMap={studentNameMap}
+        />
     );
 }

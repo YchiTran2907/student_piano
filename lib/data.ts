@@ -52,6 +52,17 @@ export interface Evaluation {
     scores: Scores;
 }
 
+export interface Award {
+    id: number;
+    title: string;
+    prize: string;
+    level: string;
+    year: number;
+    studentEmail: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export interface StudentData {
     id: number;
     email: string;
@@ -66,6 +77,7 @@ export interface StudentData {
     attended: number;
     fee: string;
     scheduleItems: ScheduleItem[];
+    awards: Award[];
 }
 
 export async function getAccountDataByEmail(email: string): Promise<Accounts> {
@@ -92,6 +104,7 @@ export async function getStudentDataByEmail(email: string): Promise<StudentData>
             where: { email },
             include: {
                 scheduleItems: true,
+                awards: true,
             },
         });
 
@@ -181,6 +194,7 @@ export async function getAllStudents(): Promise<StudentData[]> {
             },
             include: {
                 scheduleItems: true,
+                awards: true,
             },
             orderBy: {
                 id: "asc",
