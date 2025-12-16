@@ -20,6 +20,11 @@ const levelStyle: Record<string, { badge: string; ring: string; icon: JSX.Elemen
         ring: "ring-orange-300",
         icon: <Medal size={18} />,
     },
+    potential: {
+        badge: "from-emerald-400 to-teal-500",
+        ring: "ring-emerald-300",
+        icon: <Sparkles size={18} />,
+    },
 };
 
 interface AchievementClientProps {
