@@ -100,7 +100,7 @@ export default function PersonalClient({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <InfoCard title="Liên hệ">
                     <div className="space-y-3">
-                        <DetailItem label="Email" value={student.email} Icon={Mail} />
+                        <DetailItem label="Tài khoản" value={student.email} Icon={Mail} />
                         <DetailItem label="Số điện thoại" value={student.contact} Icon={Phone} />
                         <DetailItem label="Phụ huynh" value={student.parentName} Icon={User} />
                         <DetailItem label="Tuổi học viên" value={student.age} Icon={Calendar} />

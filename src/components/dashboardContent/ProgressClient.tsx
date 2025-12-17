@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BookOpen, Target, Layers, Star } from 'lucide-react';
+import { BookOpen, Target, Layers, Star, ChevronDown } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { ProgressAndEvaluation, Scores } from '../../../lib/data';
 
@@ -69,10 +69,9 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
         <section className="space-y-12">
 
             {/* HEADER */}
-            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-gradient-to-br from-[#fffdf8] via-[#f7f3ea] to-[#f1ede4] p-6 sm:p-10 md:p-12 shadow-sm">
+            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-gradient-to-br from-[#fffdf8] via-[#f7f3ea] to-[#f1ede4] p-6 sm:p-10 md:p-6 shadow-sm">
                 <div className="absolute -top-20 -right-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-amber-200/25 blur-3xl" />
                 <div className="absolute -bottom-20 -left-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-rose-200/20 blur-3xl" />
-
                 <div className="relative flex flex-col md:flex-row md:items-center gap-6 sm:gap-8">
                     <div className="flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-2xl sm:rounded-3xl bg-white shadow ring-1 ring-stone-200">
                         <Layers size={28} className="text-stone-700 sm:hidden" />
@@ -117,6 +116,10 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                         {headerIcon}
                                     </div>
                                     <h3 className="text-md font-bold text-emerald-800">{title}</h3>
+                                    <ChevronDown
+                                        size={20}
+                                        className={`text-emerald-500 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
+                                    />
                                 </div>
 
                                 {/* CONTENT */}

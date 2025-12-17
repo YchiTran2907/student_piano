@@ -1,13 +1,13 @@
 "use client";
 
 import React, { JSX } from "react";
-import { Trophy, Crown, Medal, Star, User, Sparkles } from "lucide-react";
+import { Trophy, Crown, Medal, Star, User, Sparkles, Scroll } from "lucide-react";
 import { Award } from '../../../lib/data';
 
 const levelStyle: Record<string, { badge: string; ring: string; icon: JSX.Element }> = {
     gold: {
-        badge: "from-yellow-400 to-yellow-500",
-        ring: "ring-yellow-300",
+        badge: "from-yellow-400 via-yellow-500 to-yellow-600",
+        ring: "ring-yellow-400",
         icon: <Crown size={18} />,
     },
     silver: {
@@ -25,6 +25,11 @@ const levelStyle: Record<string, { badge: string; ring: string; icon: JSX.Elemen
         ring: "ring-emerald-300",
         icon: <Sparkles size={18} />,
     },
+    certificate: {
+        badge: "from-indigo-400 to-violet-500",
+        ring: "ring-indigo-300",
+        icon: <Scroll size={18} />,
+    },
 };
 
 interface AchievementClientProps {
@@ -34,12 +39,52 @@ interface AchievementClientProps {
     studentNameMap: Record<string, string>;
 }
 
+interface AwardCardProps {
+    award: Award;
+    studentName: string;
+    highlight?: boolean;
+}
+
+function AwardCard({ award, studentName, highlight = false }: AwardCardProps) {
+    const style = levelStyle[award.level.toLowerCase()] || levelStyle.bronze;
+    return (
+        <div
+            className={`relative rounded-3xl bg-white p-6 shadow ring-1 ${style.ring} 
+                ${highlight ? "scale-105 shadow-2xl transition-transform" : "hover:shadow-lg transition"}`}>
+            <div
+                className={`absolute -top-3 right-4 flex items-center gap-2 px-3 py-1 rounded-full text-white text-sm font-semibold bg-gradient-to-r ${style.badge}`}>
+                {style.icon} {award.prize}
+            </div>
+            <h4 className="font-semibold text-gray-900">{award.title}</h4>
+            <div className="mt-2 text-sm text-gray-600">
+                🎹 Học sinh: <span className="font-medium">{studentName}</span>
+            </div>
+        </div>
+    );
+}
+
 export default function AchievementClient({ awards, studentName, classAwards, studentNameMap }: AchievementClientProps) {
+    const sortedAwards = [...awards].sort((a, b) => b.year - a.year);
+    const awardsByYear: Record<number, Award[]> = {};
+    sortedAwards.forEach(a => {
+        if (!awardsByYear[a.year]) awardsByYear[a.year] = [];
+        awardsByYear[a.year].push(a);
+    });
+    const awardYears = Object.keys(awardsByYear).map(Number).sort((a, b) => b - a);
+
+    const sortedClassAwards = [...classAwards].sort((a, b) => b.year - a.year);
+    const classAwardsByYear: Record<number, Award[]> = {};
+    sortedClassAwards.forEach(a => {
+        if (!classAwardsByYear[a.year]) classAwardsByYear[a.year] = [];
+        classAwardsByYear[a.year].push(a);
+    });
+    const classAwardYears = Object.keys(classAwardsByYear).map(Number).sort((a, b) => b - a);
+
     return (
         <section className="space-y-20">
 
-            {/* ================= HERO ================= */}
-            <div className="relative overflow-hidden rounded-3xl border border-emerald-200 bg-gradient-to-br from-[#fdfcf9] via-[#f7f3eb] to-[#eef7f3] p-6 sm:p-10 md:p-12 shadow-sm">
+            {/* ================= Header ================= */}
+            <div className="relative overflow-hidden rounded-3xl border border-emerald-200 bg-gradient-to-br from-[#fdfcf9] via-[#f7f3eb] to-[#eef7f3] p-6 sm:p-10 md:p-6 shadow-sm">
                 <div className="absolute -top-20 -right-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-emerald-200/30 blur-3xl" />
                 <div className="absolute -bottom-20 -left-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-yellow-200/20 blur-3xl" />
 
@@ -83,40 +128,25 @@ export default function AchievementClient({ awards, studentName, classAwards, st
                     </div>
                 </div>
 
-                {awards.length === 0 ? (
-                    <p className="text-gray-500 italic">Con hãy tiếp tục nỗ lực và giữ vững tinh thần học tập để chinh phục những giải thưởng trong thời gian tới nhé ^^</p>
+                {sortedAwards.length === 0 ? (
+                    <p className="text-gray-500 italic">
+                        Con hãy tiếp tục nỗ lực và giữ vững tinh thần học tập để chinh phục những giải thưởng trong thời gian tới nhé ^^
+                    </p>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {awards.map((award) => {
-                            const style = levelStyle[award.level.toLowerCase()] || levelStyle.bronze;
-                            return (
-                                <div
-                                    key={award.id}
-                                    className={`relative rounded-3xl bg-white p-7 shadow-lg ring-2 ${style.ring} hover:shadow-xl transition`}
-                                >
-                                    <div
-                                        className={`absolute -top-4 right-6 flex items-center gap-2 px-4 py-1 rounded-full text-white text-sm font-semibold bg-gradient-to-r ${style.badge}`}
-                                    >
-                                        {style.icon}
-                                        {award.prize}
-                                    </div>
-
-                                    <h3 className="text-xl font-semibold text-gray-900">
-                                        {award.title}
-                                    </h3>
-
-                                    <div className="mt-4 text-sm text-gray-600 space-y-1">
-                                        <p>🎹 Học sinh: <span className="font-medium">{studentName}</span></p>
-                                        <p>📅 Năm: {award.year}</p>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    awardYears.map(year => (
+                        <div key={year} className="space-y-6">
+                            <h3 className="text-xl font-bold text-gray-700">{year}</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {awardsByYear[year].map(a => (
+                                    <AwardCard key={a.id} award={a} studentName={studentName} />
+                                ))}
+                            </div>
+                        </div>
+                    ))
                 )}
             </div>
 
-            {/* ================= CLASS AWARDS ================= */}
+            {/* ================= CLASS AWARDS (TIMELINE) ================= */}
             <div className="relative rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-10 space-y-6">
                 <div className="flex items-center gap-4">
                     <div className="h-14 w-14 rounded-2xl bg-slate-200 text-slate-700 flex items-center justify-center shadow">
@@ -129,51 +159,25 @@ export default function AchievementClient({ awards, studentName, classAwards, st
                     </div>
                 </div>
 
-                {classAwards.length === 0 ? (
+                {sortedClassAwards.length === 0 ? (
                     <p className="text-gray-500 italic">
                         Hiện chưa có thành tích chung nào được ghi nhận.
                     </p>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        {classAwards.map((award) => {
-                            const style = levelStyle[award.level.toLowerCase()] || levelStyle.bronze;
-
-                            return (
-                                <div
-                                    key={award.id}
-                                    className={`relative rounded-3xl bg-white p-7 shadow-md ring-1 ring-slate-200
-                hover:ring-2 ${style.ring} hover:shadow-xl transition-all duration-300`}
-                                >
-                                    {/* Badge */}
-                                    <div
-                                        className={`absolute -top-4 right-6 flex items-center gap-2
-                    px-4 py-1 rounded-full text-white text-sm font-semibold
-                    bg-gradient-to-r ${style.badge} shadow`}
-                                    >
-                                        {style.icon}
-                                        {award.prize}
-                                    </div>
-
-                                    {/* Title */}
-                                    <h3 className="text-lg font-semibold text-gray-900 leading-snug">
-                                        {award.title}
-                                    </h3>
-
-                                    {/* Info */}
-                                    <div className="mt-4 text-sm text-gray-600 space-y-1">
-                                        <p>
-                                            🎹 Học sinh:
-                                            <span className="font-medium text-gray-800 ml-1">
-                                                {studentNameMap[award.studentEmail]}
-                                            </span>
-                                        </p>
-                                        <p>📅 Năm: {award.year}</p>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-
+                    classAwardYears.map(year => (
+                        <div key={year} className="space-y-6">
+                            <h3 className="text-xl font-bold text-gray-700">{year}</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                {classAwardsByYear[year].map(a => (
+                                    <AwardCard
+                                        key={a.id}
+                                        award={a}
+                                        studentName={studentNameMap[a.studentEmail]}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ))
                 )}
             </div>
 
