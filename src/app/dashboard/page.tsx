@@ -4,6 +4,7 @@ import Progress from "@/components/dashboardContent/Progress";
 import Schedule from "@/components/dashboardContent/Schedule";
 import Attendance from "@/components/dashboardContent/Attendance";
 import Achievement from "@/components/dashboardContent/Achievement";
+import Contest from "@/components/dashboardContent/Contest";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAccountDataByEmail } from "../../../lib/data";
@@ -35,7 +36,7 @@ export default async function StudentsDashboard() {
     const progressContent = <Progress userEmail={userEmail} />;
 
     const achievementContent = <Achievement userEmail={userEmail} />;
-    const contestContent = ComingSoonContent("Cuộc thi");
+    const contestContent = <Contest />;
     const feeContent = ComingSoonContent("Học phí");
     const attendanceContent = <Attendance />
 

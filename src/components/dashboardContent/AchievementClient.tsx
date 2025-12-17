@@ -55,7 +55,7 @@ export default function AchievementClient({ awards, studentName, classAwards, st
                         <p className="uppercase tracking-[0.3em] text-sm text-emerald-600 font-semibold">
                             Piano Achievements
                         </p>
-                        <h1 className="text-3xl md:text-2xl font-serif font-bold text-gray-900">
+                        <h1 className="text-3xl md:text-xl font-bold text-gray-900">
                             Giải thưởng & Thành tích
                         </h1>
                         <p className="max-w-xl text-gray-600 leading-relaxed">
@@ -86,7 +86,7 @@ export default function AchievementClient({ awards, studentName, classAwards, st
                 </div>
 
                 {awards.length === 0 ? (
-                    <p className="text-gray-500 italic"></p>
+                    <p className="text-gray-500 italic">Con hãy tiếp tục nỗ lực và giữ vững tinh thần học tập để chinh phục những giải thưởng trong thời gian tới nhé ^^</p>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {awards.map((award) => {

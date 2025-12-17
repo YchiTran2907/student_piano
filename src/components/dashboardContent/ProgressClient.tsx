@@ -69,13 +69,28 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
         <section className="space-y-12">
 
             {/* HEADER */}
-            <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100">
-                    <Layers className="text-emerald-700" />
-                </span>
-                <h2 className="text-xl font-bold text-emerald-900">
-                    Tiến độ học tập
-                </h2>
+            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-gradient-to-br from-[#fffdf8] via-[#f7f3ea] to-[#f1ede4] p-12 shadow-sm">
+                <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-amber-200/25 blur-3xl" />
+                <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-rose-200/20 blur-3xl" />
+                <div className="relative flex flex-col md:flex-row md:items-center gap-8">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white shadow ring-1 ring-stone-200">
+                        <Layers size={36} className="text-stone-700" />
+                    </div>
+                    <div className="space-y-3">
+                        <p className="uppercase tracking-[0.3em] text-sm text-stone-600 font-semibold">
+                            Learning Progress
+                        </p>
+
+                        <h1 className="text-3xl md:text-xl font-bold text-stone-900">
+                            Tiến độ học tập
+                        </h1>
+
+                        <p className="max-w-xl text-stone-600 leading-relaxed">
+                            Ghi lại quá trình rèn luyện, mục tiêu học tập và đánh giá năng lực
+                            của học sinh theo từng giai đoạn.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             {/* ===================== PROGRESS ===================== */}

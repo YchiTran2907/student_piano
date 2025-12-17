@@ -31,4 +31,3 @@ export default async function Achievement({ userEmail }: AchievementProps) {
         />
     );
 }
-

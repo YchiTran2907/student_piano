@@ -76,6 +76,7 @@ export interface StudentData {
     totalSessions: number;
     attended: number;
     fee: string;
+    del_flg: number;
     scheduleItems: ScheduleItem[];
     awards: Award[];
 }
@@ -173,7 +174,7 @@ export async function getProgressDataByEmail(email: string): Promise<ProgressAnd
     }
 }
 
-export async function getAllStudents(): Promise<StudentData[]> {
+export async function getAllStudents(delFlg?: number): Promise<StudentData[]> {
     try {
         const adminAccounts = await prisma.account.findMany({
             where: {
@@ -191,6 +192,7 @@ export async function getAllStudents(): Promise<StudentData[]> {
                 email: {
                     notIn: adminEmails,
                 },
+                ...(delFlg !== undefined && { del_flg: delFlg }),
             },
             include: {
                 scheduleItems: true,
