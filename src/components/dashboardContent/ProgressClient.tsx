@@ -69,23 +69,25 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
         <section className="space-y-12">
 
             {/* HEADER */}
-            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-gradient-to-br from-[#fffdf8] via-[#f7f3ea] to-[#f1ede4] p-12 shadow-sm">
-                <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-amber-200/25 blur-3xl" />
-                <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-rose-200/20 blur-3xl" />
-                <div className="relative flex flex-col md:flex-row md:items-center gap-8">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white shadow ring-1 ring-stone-200">
-                        <Layers size={36} className="text-stone-700" />
+            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-gradient-to-br from-[#fffdf8] via-[#f7f3ea] to-[#f1ede4] p-6 sm:p-10 md:p-12 shadow-sm">
+                <div className="absolute -top-20 -right-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-amber-200/25 blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-rose-200/20 blur-3xl" />
+
+                <div className="relative flex flex-col md:flex-row md:items-center gap-6 sm:gap-8">
+                    <div className="flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-2xl sm:rounded-3xl bg-white shadow ring-1 ring-stone-200">
+                        <Layers size={28} className="text-stone-700 sm:hidden" />
+                        <Layers size={32} className="hidden sm:block md:hidden text-stone-700" />
+                        <Layers size={36} className="hidden md:block text-stone-700" />
                     </div>
-                    <div className="space-y-3">
-                        <p className="uppercase tracking-[0.3em] text-sm text-stone-600 font-semibold">
+                    <div className="space-y-2 sm:space-y-3">
+                        <p className="uppercase tracking-[0.25em] text-xs sm:text-sm text-stone-600 font-semibold">
                             Learning Progress
                         </p>
 
-                        <h1 className="text-3xl md:text-xl font-bold text-stone-900">
+                        <h1 className="text-xl sm:text-2xl md:text-2xl font-bold text-stone-900">
                             Tiến độ học tập
                         </h1>
-
-                        <p className="max-w-xl text-stone-600 leading-relaxed">
+                        <p className="max-w-xl text-sm sm:text-base text-stone-600 leading-relaxed">
                             Ghi lại quá trình rèn luyện, mục tiêu học tập và đánh giá năng lực
                             của học sinh theo từng giai đoạn.
                         </p>

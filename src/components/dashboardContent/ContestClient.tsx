@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Trophy, Calendar, MapPin, ExternalLink, Sparkles } from "lucide-react";
+import { Trophy, MapPin, ExternalLink } from "lucide-react";
 
 interface Competition {
     id: number;
@@ -43,23 +43,23 @@ export default function ContestClient() {
         <section className="space-y-20">
 
             {/* ================= HERO ================= */}
-            <div className="relative overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-[#f9fbff] via-[#f2f6ff] to-[#eef2ff] p-12 shadow-sm">
-                <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-indigo-200/30 blur-3xl" />
-                <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-purple-200/20 blur-3xl" />
-
-                <div className="relative flex flex-col md:flex-row md:items-center gap-8">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white shadow ring-1 ring-indigo-200">
-                        <Trophy size={36} className="text-indigo-600" />
+            <div className="relative overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-[#f9fbff] via-[#f2f6ff] to-[#eef2ff] p-6 sm:p-10 md:p-12 shadow-sm">
+                <div className="absolute -top-20 -right-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-indigo-200/30 blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full bg-purple-200/20 blur-3xl" />
+                <div className="relative flex flex-col md:flex-row md:items-center gap-6 sm:gap-8">
+                    <div className="flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-2xl sm:rounded-3xl bg-white shadow ring-1 ring-indigo-200">
+                        <Trophy size={28} className="text-indigo-600 sm:hidden" />
+                        <Trophy size={32} className="hidden sm:block md:hidden text-indigo-600" />
+                        <Trophy size={36} className="hidden md:block text-indigo-600" />
                     </div>
-
-                    <div className="space-y-3">
-                        <p className="uppercase tracking-[0.3em] text-sm text-indigo-600 font-semibold">
+                    <div className="space-y-2 sm:space-y-3">
+                        <p className="uppercase tracking-[0.25em] text-xs sm:text-sm text-indigo-600 font-semibold">
                             Piano Competitions
                         </p>
-                        <h1 className="text-3xl md:text-2xl font-bold text-gray-900">
+                        <h1 className="text-xl sm:text-2xl md:text-xxl font-bold text-gray-900">
                             Các cuộc thi âm nhạc
                         </h1>
-                        <p className="max-w-xl text-gray-600 leading-relaxed">
+                        <p className="max-w-xl text-sm sm:text-base text-gray-600 leading-relaxed">
                             Tổng hợp các cuộc thi piano uy tín trong nước và quốc tế,
                             nơi học sinh có cơ hội thử sức và ghi dấu hành trình học tập.
                         </p>
