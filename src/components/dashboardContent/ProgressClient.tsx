@@ -124,30 +124,43 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                 </div>
 
                                 {/* CONTENT */}
-                                <div
-                                    className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-[2000px] mt-2" : "max-h-0"
-                                        }`}
-                                >
-                                    <div className="rounded-2xl bg-white border border-emerald-200 p-6 shadow-sm flex flex-col gap-4">
-                                        {items.map((item: any, index: number) => {
-                                            const isEvaluation = item.type === "Đánh giá";
-                                            const isObjective = item.type === "Mục tiêu";
-                                            return (
-                                                <div key={index} className="flex items-start gap-4">
-                                                    <div
-                                                        className={`flex-1 rounded-xl p-4 shadow-sm w-full
-                                                            ${isEvaluation ? "bg-yellow-50 border border-yellow-200 text-yellow-900" : isObjective ? "bg-blue-50 border border-blue-200 text-blue-900" : "bg-emerald-50 border border-emerald-100 text-gray-700"}`}>
-                                                        <span
-                                                            className={`inline-block mb-1 text-xs font-semibold uppercase px-2 py-1 rounded-full
-                                                            ${isEvaluation ? "bg-yellow-200 text-yellow-800" : "bg-emerald-100 text-emerald-700"}`}>
-                                                            {item.type}
-                                                        </span>
-                                                        <p className="text-xs mt-1 text-gray-500">{formatDate(item.date)}</p>
-                                                        <p className="mt-1 whitespace-pre-line">{item.description}</p>
+                                <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr]"}`}>
+                                    <div className="overflow-hidden">
+                                        <div className="rounded-2xl bg-white border border-emerald-200 p-6 shadow-sm flex flex-col gap-4">
+                                            {items.map((item: any, index: number) => {
+                                                const isEvaluation = item.type === "Đánh giá";
+                                                const isObjective = item.type === "Mục tiêu";
+                                                return (
+                                                    <div key={index} className="flex items-start gap-4">
+                                                        <div
+                                                            className={`flex-1 rounded-xl p-4 shadow-sm w-full
+                                                        ${isEvaluation
+                                                                    ? "bg-yellow-50 border border-yellow-200 text-yellow-900"
+                                                                    : isObjective
+                                                                        ? "bg-blue-50 border border-blue-200 text-blue-900"
+                                                                        : "bg-emerald-50 border border-emerald-100 text-gray-700"
+                                                                }`}
+                                                        >
+                                                            <span
+                                                                className={`inline-block mb-1 text-xs font-semibold uppercase px-2 py-1 rounded-full
+                                                        ${isEvaluation
+                                                                        ? "bg-yellow-200 text-yellow-800"
+                                                                        : "bg-emerald-100 text-emerald-700"
+                                                                    }`}
+                                                            >
+                                                                {item.type}
+                                                            </span>
+                                                            <p className="text-xs mt-1 text-gray-500">
+                                                                {formatDate(item.date)}
+                                                            </p>
+                                                            <p className="mt-1 whitespace-pre-line">
+                                                                {item.description}
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            );
-                                        })}
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
