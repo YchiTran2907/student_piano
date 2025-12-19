@@ -19,8 +19,8 @@ const competitions: Competition[] = [
         id: 1,
         title: "Associated Board of the Royal Schools of Music (APAF)",
         organizer: "Royal Academy of Music, Royal College of Music, Royal Northern College of Music, Royal Conservatoire of Scotland",
-        location: "Hà Nội, Sài gòn",
-        year: 2025,
+        location: "Hà Nội, Tp HCM",
+        year: 2026,
         description:
             "ABRSM (Associated Board of the Royal Schools of Music) là hệ thống thi và cấp chứng chỉ âm nhạc uy tín hàng đầu thế giới, được thành lập năm 1889 (Anh Quốc). Là chứng chỉ được công nhận tại hơn 90 quốc gia và có giá trị trong hồ sơ học thuật, du học, xét tuyển / cộng điểm tại một số hệ thống giáo dục...",
         link: "https://www.abrsm.org/en-vn",
@@ -28,35 +28,14 @@ const competitions: Competition[] = [
     },
     {
         id: 2,
-        title: "Crescendo International Music Festival & Competition",
-        organizer: "APIAF Organization",
-        location: "Hà Nội",
-        year: 2025,
+        title: "Chicago International Music Competition ",
+        organizer: "International Institute of Piano Artistry",
+        location: "TP HCM, Thái Lan, Chicago (Mỹ)",
+        year: 2026,
         description:
-            "Cuộc thi Crescendo International Music Festival & Competition 2025 (CIMFC 2025) là một liên hoan và cuộc thi âm nhạc quốc tế chuyên nghiệp, thu hút thí sinh từ Việt Nam và nhiều nước khác như Áo, Pháp, Hàn Quốc, Malaysia, Brunei… với hơn 800 đăng ký tham dự vòng sơ loại. Đây là lần thứ 2 sự kiện được tổ chức tại Việt Nam sau mùa đầu tiên cùng Hitmaker Global Academy ở Singapore...",
-        link: "https://cimfc.vn/en/",
+            "Cuộc thi Âm nhạc Quốc Tế Chicago (Chicago International Music Competition – CIMC) là điểm đến của những nghệ sĩ trẻ từ khắp thế giới. Không chỉ dừng lại ở cuộc thi, CIMC là sân khấu để tỏa sáng, là nền tảng phát triển sự nghiệp và là mạng lưới kết nối những tài năng có chung khát vọng chinh phục nghệ thuật. Hàng năm, cuộc thi quy tụ rất nhiều nghệ sĩ trẻ từ khắp nơi trên thế giới đến tranh tài, với hi vọng cuộc thi là bệ phóng cho sự nghiệp thành công của các thí sinh tham gia. Các thí sinh tham gia sẽ có cơ hội nhận các giải thưởng tiền mặt và trình diễn tại các sân khấu lớn trên thế giới. Cuộc thi có sự góp mặt của đội ngũ ban giám khảo dày dạn kinh nghiệm và nổi tiếng trên thế giới...",
+        link: "https://cimc-usa.asia/cuoc-thi/",
         highlight: true,
-    },
-    {
-        id: 3,
-        title: "HONG KONG INTERNATIONAL MUSIC FESTIVAL",
-        organizer: "HKIMF",
-        location: "Hong Kong",
-        year: 2025,
-        description:
-            "HKIMF là một trong những cuộc thi âm nhạc quy mô lớn nhất Hồng Kông, có hình thức thi vô cùng đa dạng, kết hợp giữa các thể loại âm nhạc như: nhạc cổ điển, nhạc Trung Quốc, nhạc POP, nhạc hiện đại và nhiều loại hình âm nhạc khác nhau thông qua hoạt động liên hoan âm nhạc quốc tế, tạo cơ hội để các thí sinh giao lưu học hỏi kết hợp khám phá tham quan du lịch tại nơi tổ chức cuộc thi, tham dự hòa nhạc, Master class và hội thảo âm nhạc...",
-        link: "https://hkimfvietnam.com/",
-    },
-    {
-        id: 4,
-        title: "Asia Pacific Arts Festival (APAF)",
-        organizer: "APAF",
-        location: "Đài Bắc, Đài Loan (Taiwan)",
-        year: 2025,
-        description:
-            "Asia Pacific Arts Festival (APAF) là một liên hoan nghệ thuật quốc tế được tổ chức hàng năm, thu hút các thí sinh trẻ ở nhiều lĩnh vực nghệ thuật như âm nhạc, múa, hát, nhạc cụ,… đến từ các quốc gia và vùng lãnh thổ trong khu vực Châu Á – Thái Bình Dương và xa hơn nữa. Mục tiêu của APAF là thúc đẩy giao lưu văn hóa, hòa bình và kết nối giữa các nền nghệ thuật khác nhau...",
-        link: "https://apaf.asia/",
-        highlight: true
     }
 ];
 
