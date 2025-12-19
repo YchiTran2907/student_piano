@@ -118,7 +118,8 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                     <h3 className="text-md font-bold text-emerald-800">{title}</h3>
                                     <ChevronDown
                                         size={20}
-                                        className={`text-emerald-500 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
+                                        className={`flex-shrink-0 text-emerald-500 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
+                                            }`}
                                     />
                                 </div>
 

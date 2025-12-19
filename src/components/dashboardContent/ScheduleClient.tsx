@@ -30,7 +30,7 @@ interface ScheduleClientProps {
 export default function ScheduleClient({ initialData, scheduleItems }: ScheduleClientProps) {
     if (initialData.length === 0) {
         return (
-            <div className="rounded-2xl bg-white p-8 text-center text-gray-500 shadow">
+            <div className="rounded-2xl bg-white p-8 text-center tevxt-gray-500 shadow">
                 Không có dữ liệu lịch học / điểm danh.
             </div>
         );

@@ -1,7 +1,7 @@
 'use client';
 
 import { logoutAction } from '@/app/login/actions';
-import { User, Calendar, BarChart3, FileText, DollarSign, Trophy, X, LogOut, CalendarCheck } from 'lucide-react';
+import { User, Calendar, BarChart3, FileText, Trophy, X, LogOut, CalendarCheck, UsersRound } from 'lucide-react';
 import React, { useTransition } from 'react';
 
 export type MenuOption =
@@ -11,7 +11,8 @@ export type MenuOption =
     | 'Achievement'
     | 'Contest'
     | 'Fee'
-    | 'Attendance';
+    | 'Attendance'
+    | 'ListSchedule';
 
 interface SidebarMenuProps {
     roleUser: string;
@@ -30,12 +31,13 @@ export default function SidebarMenu({
 }: SidebarMenuProps) {
     const menuItems = [
         { key: 'Personal', label: 'Thông tin cá nhân', icon: User, roles: ['Admin', 'Student'] },
-        { key: 'Schedule', label: 'Thời khoá biểu', icon: Calendar, roles: ['Admin', 'Student'] },
+        { key: 'Schedule', label: 'Thời khoá biểu', icon: Calendar, roles: ['Student'] },
         { key: 'Progress', label: 'Tiến độ học tập', icon: BarChart3, roles: ['Admin', 'Student'] },
         { key: 'Achievement', label: 'Giải thưởng', icon: Trophy, roles: ['Admin', 'Student'] },
         { key: 'Contest', label: 'Cuộc thi', icon: FileText, roles: ['Admin', 'Student'] },
         // { key: 'Fee', label: 'Học phí', icon: DollarSign, roles: ['Admin', 'Student'] },
         { key: 'Attendance', label: 'Điểm danh', icon: CalendarCheck, roles: ['Admin'] },
+        { key: 'ListSchedule', label: 'Thời khoá biểu', icon: UsersRound, roles: ['Admin'] },
     ];
 
     const sidebarClasses = `

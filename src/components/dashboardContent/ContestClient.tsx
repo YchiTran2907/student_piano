@@ -141,8 +141,7 @@ export default function ContestClient() {
             {/* ================= FOOTER NOTE ================= */}
             <div className="rounded-3xl bg-indigo-50 border border-indigo-200 p-8">
                 <p className="text-sm leading-relaxed text-indigo-700">
-                    Các cuộc thi được lựa chọn phù hợp với năng lực và độ tuổi của học sinh,
-                    nhằm tạo cơ hội trải nghiệm, học hỏi và phát triển sự tự tin trên sân khấu.
+                    Các cuộc thi được lựa chọn phù hợp với độ tuổi và năng lực của học sinh, nhằm tạo điều kiện cho các con được trải nghiệm, học hỏi và rèn luyện sự tự tin khi biểu diễn trên sân khấu. Đồng thời, đây cũng là bước đệm quan trọng giúp các con từng bước hướng tới những mục tiêu lớn hơn trong tương lai.
                 </p>
             </div>
         </section>

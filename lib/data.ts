@@ -81,6 +81,11 @@ export interface StudentData {
     awards: Award[];
 }
 
+export interface ProgressAndEvaluation {
+    progress: ProgressItem[];
+    evaluations: Evaluation[];
+}
+
 export async function getAccountDataByEmail(email: string): Promise<Accounts> {
     try {
         const role = await prisma.account.findUnique({
@@ -137,11 +142,6 @@ export async function getScheduleDataByEmail(email: string): Promise<YearlySched
         console.error('DATABASE ERROR: Failed to fetch schedule data.', error);
         throw new Error('Failed to fetch schedule data.');
     }
-}
-
-export interface ProgressAndEvaluation {
-    progress: ProgressItem[];
-    evaluations: Evaluation[];
 }
 
 export async function getProgressDataByEmail(email: string): Promise<ProgressAndEvaluation> {

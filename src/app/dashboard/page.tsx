@@ -5,6 +5,7 @@ import Schedule from "@/components/dashboardContent/Schedule";
 import Attendance from "@/components/dashboardContent/Attendance";
 import Achievement from "@/components/dashboardContent/Achievement";
 import Contest from "@/components/dashboardContent/Contest";
+import ListSchedule from "@/components/dashboardContent/ListSchedule";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAccountDataByEmail } from "../../../lib/data";
@@ -39,6 +40,7 @@ export default async function StudentsDashboard() {
     const contestContent = <Contest />;
     const feeContent = ComingSoonContent("Học phí");
     const attendanceContent = <Attendance />
+    const listScheduleContent = <ListSchedule />
 
     return (
         <DashboardLayout
@@ -50,6 +52,7 @@ export default async function StudentsDashboard() {
             contestContent={contestContent}
             feeContent={feeContent}
             attendanceContent={attendanceContent}
+            listScheduleContent={listScheduleContent}
         />
     );
 }

@@ -79,7 +79,7 @@ export default function AttendanceClient({ dataAllStudents }: AttendanceClientPr
                                     <p className="text-sm text-gray-600">
                                         {s.grade}
                                     </p>
-                                    <p className="text-xs text-emerald-700 font-medium bg-emerald-50 inline-block px-2 py-0.5 rounded">
+                                    <p className="text-xs text-emerald-700 font-bold bg-emerald-50 inline-block px-2 py-0.5 rounded">
                                         {s.className}
                                     </p>
                                 </div>
@@ -89,7 +89,7 @@ export default function AttendanceClient({ dataAllStudents }: AttendanceClientPr
                                     disabled={isLoading || isChecked}
                                     onClick={() => handleAttendance(s.id)}
                                     className={`
-                                        w-full rounded-xl py-2.5 text-sm font-medium shadow transition-all duration-300 ease-out
+                                        w-full rounded-xl py-2.5 text-sm font-bold shadow transition-all duration-300 ease-out
                                         ${isChecked
                                             ? "bg-gray-300 text-gray-600 cursor-default"
                                             : "bg-emerald-600 text-white hover:bg-emerald-700"
