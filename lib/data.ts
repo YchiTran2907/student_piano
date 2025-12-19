@@ -14,6 +14,7 @@ export interface ScheduleItem {
     time: string;
     subject: string;
     location: string;
+    studentEmail: string;
 }
 
 export interface MonthlyAttendance {
@@ -85,6 +86,14 @@ export interface ProgressAndEvaluation {
     progress: ProgressItem[];
     evaluations: Evaluation[];
 }
+
+export type GroupedStudentSchedule = {
+    id: number;
+    name: string;
+    studentEmail: string;
+    schedules: ScheduleItem[];
+};
+
 
 export async function getAccountDataByEmail(email: string): Promise<Accounts> {
     try {
@@ -208,5 +217,35 @@ export async function getAllStudents(delFlg?: number): Promise<StudentData[]> {
         console.error("DATABASE ERROR: Failed to fetch all students.", error);
         throw new Error("Failed to fetch all students.");
     }
+}
+
+export async function getGroupedStudentSchedules(delFlg: number) {
+    const students = await getAllStudents(delFlg);
+
+    const schedules = students.flatMap((student) =>
+        student.scheduleItems.map((schedule) => ({
+            ...schedule,
+            id: student.id,
+            name: student.name
+        }))
+    );
+
+    const grouped = Object.values(
+        schedules.reduce((acc, cur) => {
+            if (!acc[cur.studentEmail]) {
+                acc[cur.studentEmail] = {
+                    id: cur.id,
+                    name: cur.name,
+                    studentEmail: cur.studentEmail,
+                    schedules: [],
+                };
+            }
+
+            acc[cur.studentEmail].schedules.push(cur);
+            return acc;
+        }, {} as Record<string, GroupedStudentSchedule>)
+    );
+
+    return grouped;
 }
 
