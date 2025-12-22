@@ -17,7 +17,7 @@ interface Competition {
 const competitions: Competition[] = [
     {
         id: 1,
-        title: "Associated Board of the Royal Schools of Music (APAF)",
+        title: "Associated Board of the Royal Schools of Music (ABRSM)",
         organizer: "Royal Academy of Music, Royal College of Music, Royal Northern College of Music, Royal Conservatoire of Scotland",
         location: "Hà Nội, Tp HCM",
         year: 2026,

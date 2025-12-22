@@ -101,6 +101,12 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                         const firstItemType = items.length > 0 ? items[0].type : "default";
                         const headerIcon = getProgressIcon(firstItemType);
                         const borderColor = colorMap[firstItemType] || colorMap["default"];
+                        const latestDate = Math.max(
+                            ...progress.map(p => new Date(p.date).getTime())
+                        );
+                        const hasNewestItem = items.some(
+                            item => new Date(item.date).getTime() === latestDate
+                        );
 
                         const [isOpen, setIsOpen] = useState(false);
 
@@ -116,6 +122,11 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                         {headerIcon}
                                     </div>
                                     <h3 className="text-md font-bold text-emerald-800">{title}</h3>
+                                    {hasNewestItem && (
+                                        <span className="mr-2 align-middle text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
+                                            NEW
+                                        </span>
+                                    )}
                                     <ChevronDown
                                         size={20}
                                         className={`flex-shrink-0 text-emerald-500 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
@@ -154,6 +165,11 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                                                 {formatDate(item.date)}
                                                             </p>
                                                             <p className="mt-1 whitespace-pre-line">
+                                                                {index === 1 && (
+                                                                    <span className="mr-2 align-middle text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
+                                                                        NEW
+                                                                    </span>
+                                                                )}
                                                                 {item.description}
                                                             </p>
                                                         </div>
