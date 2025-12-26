@@ -28,7 +28,7 @@ export interface MonthlyAttendance {
 export interface YearlySchedule {
     id: number;
     year: number;
-    monthlyData: MonthlyAttendance[];
+    monthlyData?: MonthlyAttendance[];
 }
 
 export interface ProgressItem {
@@ -79,6 +79,7 @@ export interface StudentData {
     fee: string;
     del_flg: number;
     scheduleItems: ScheduleItem[];
+    yearlySchedules: YearlySchedule[];
     awards: Award[];
 }
 
@@ -206,6 +207,7 @@ export async function getAllStudents(delFlg?: number): Promise<StudentData[]> {
             include: {
                 scheduleItems: true,
                 awards: true,
+                yearlySchedules: true
             },
             orderBy: {
                 id: "asc",

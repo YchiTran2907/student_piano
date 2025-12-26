@@ -1,7 +1,7 @@
 'use client';
 
 import { logoutAction } from '@/app/login/actions';
-import { User, Calendar, BarChart3, FileText, Trophy, X, LogOut, CalendarCheck, UsersRound } from 'lucide-react';
+import { User, Calendar, BarChart3, FileText, Trophy, X, LogOut, CalendarCheck, UsersRound, DollarSign } from 'lucide-react';
 import React, { useTransition } from 'react';
 
 export type MenuOption =

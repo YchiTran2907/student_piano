@@ -12,9 +12,10 @@ export default function AttendanceClient({ dataAllStudents }: AttendanceClientPr
     const [loadingIds, setLoadingIds] = useState<number[]>([]);
     const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
-    const handleAttendance = async (studentId: number) => {
+    const handleAttendance = async (studentData: StudentData) => {
         try {
-            setLoadingIds((prev) => [...prev, studentId]);
+            setLoadingIds((prev) => [...prev, studentData.id]);
+            const studentId = studentData.yearlySchedules[0].id;
 
             const res = await fetch("/api/attendance/checkin", {
                 method: "POST",
@@ -29,12 +30,12 @@ export default function AttendanceClient({ dataAllStudents }: AttendanceClientPr
                 return;
             }
 
-            setCheckedIds((prev) => [...prev, studentId]);
+            setCheckedIds((prev) => [...prev, studentData.id]);
         } catch (error) {
             console.error(error);
             alert("Update đã xảy ra lỗi, vui lòng thử lại sau!");
         } finally {
-            setLoadingIds((prev) => prev.filter((id) => id !== studentId));
+            setLoadingIds((prev) => prev.filter((id) => id !== studentData.id));
         }
     };
 
@@ -87,7 +88,7 @@ export default function AttendanceClient({ dataAllStudents }: AttendanceClientPr
                                 {/* Button */}
                                 <button
                                     disabled={isLoading || isChecked}
-                                    onClick={() => handleAttendance(s.id)}
+                                    onClick={() => handleAttendance(s)}
                                     className={`
                                         w-full rounded-xl py-2.5 text-sm font-bold shadow transition-all duration-300 ease-out
                                         ${isChecked
