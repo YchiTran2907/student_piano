@@ -50,10 +50,9 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
     };
 
     // Xử lý tiến độ buổi học
-    const dataLatestYear = initialData.reduce(
-        (latest, cur) => (cur.year > latest.year ? cur : latest),
-        initialData[0]
-    );
+    const dataLatestYear =
+        initialData.find(item => item.year === selectedYear) ||
+        initialData.sort((a, b) => b.year - a.year)[0];
 
     const monthlyOfLatestYear = monthlyData.filter(
         m => m.yearlyScheduleId === dataLatestYear.id
@@ -89,7 +88,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
             });
 
             return sum + validDays.length;
-        }, 0), 8
+        }, 0)
     );
 
     const remaining = Math.max(8 - progress, 0);
@@ -280,7 +279,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                                 <div className="flex items-center gap-3">
                                     <div className="flex-1 h-3 rounded-full bg-emerald-200 overflow-hidden">
                                         <div
-                                            className="h-full bg-emerald-600"
+                                            className={`h-full ${progress >= 8 ? 'bg-red-600' : 'bg-emerald-600'}`}
                                             style={{ width: `${Math.min((progress / 8) * 100, 100)}%` }}
                                         />
                                     </div>

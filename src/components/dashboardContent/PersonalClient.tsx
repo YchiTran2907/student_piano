@@ -124,7 +124,7 @@ export default function PersonalClient({
                 <InfoCard title="Buổi học (Tổng quan)">
                     <div className="grid grid-cols-2 gap-3">
                         <DetailItem label="Số buổi đăng ký" value={student.totalSessions} Icon={Calendar} />
-                        <DetailItem label="Tổng số năm đã học" value={yearlySchedule?.length || 0} Icon={Calendar} />
+                        {/* <DetailItem label="Tổng số năm đã học" value={yearlySchedule?.length || 0} Icon={Calendar} /> */}
                         <DetailItem label="Năm bắt đầu học" value={minYear ?? "-"} Icon={Calendar} />
                     </div>
                 </InfoCard>
