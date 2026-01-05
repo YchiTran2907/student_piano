@@ -36,54 +36,82 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         );
     }
 
-    const years = initialData.map((y) => y.year);
+    const years = initialData.map(y => y.year);
     const [selectedYear, setSelectedYear] = useState(years[0]);
 
     const selectedSchedule = initialData.find(
-        (y) => y.year === selectedYear
-    );
-    const monthlyData = selectedSchedule?.monthlyData || [];
-
-    // Hàm lấy số ngày của một tháng
-    const getDaysInMonth = (year: number, monthIndex: number) => {
-        return new Date(year, monthIndex + 1, 0).getDate();
-    };
-
-    // Xử lý tiến độ buổi học
-    const dataLatestYear =
-        initialData.find(item => item.year === selectedYear) ||
-        initialData.sort((a, b) => b.year - a.year)[0];
-
-    const monthlyOfLatestYear = monthlyData.filter(
-        m => m.yearlyScheduleId === dataLatestYear.id
+        y => y.year === selectedYear
     );
 
-    const { latestMonth } = monthlyOfLatestYear.reduce(
-        (acc, cur) => {
-            if (!acc.latestMonth || cur.month > acc.latestMonth.month) {
-                acc.latestMonth = cur;
+    const monthlyData = selectedSchedule?.monthlyData ?? [];
+
+    const studentEmail = selectedSchedule?.studentEmail;
+    if (!studentEmail) return null;
+
+    const schedulesOfStudent = initialData.filter(
+        y => y.studentEmail === studentEmail
+    );
+
+    const yearByScheduleId = new Map<number, number>(
+        schedulesOfStudent.map(y => [y.id, y.year])
+    );
+
+    const allMonthlyData = schedulesOfStudent.flatMap(
+        y => y.monthlyData ?? []
+    );
+
+    const getDaysInMonth = (year: number, monthIndex: number) =>
+        new Date(year, monthIndex + 1, 0).getDate();
+
+    const normalizeDate = (d: Date) =>
+        new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+    const latestMonth = allMonthlyData.reduce(
+        (latest, cur) => {
+            if (!latest) return cur;
+
+            const latestYear = yearByScheduleId.get(latest.yearlyScheduleId);
+            const curYear = yearByScheduleId.get(cur.yearlyScheduleId);
+
+            if (latestYear == null || curYear == null) return latest;
+
+            if (
+                curYear > latestYear ||
+                (curYear === latestYear && cur.month > latest.month)
+            ) {
+                return cur;
             }
-            return acc;
-        },
-        { latestMonth: null as typeof monthlyOfLatestYear[number] | null }
-    );
 
-    const normalizeDate = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+            return latest;
+        },
+        null as typeof allMonthlyData[number] | null
+    );
 
     const startDateOfMonth = latestMonth?.startDate
         ? normalizeDate(new Date(latestMonth.startDate))
         : latestMonth
-            ? new Date(dataLatestYear.year, latestMonth.month - 1, 1)
+            ? new Date(
+                yearByScheduleId.get(latestMonth.yearlyScheduleId)!,
+                latestMonth.month - 1,
+                1
+            )
             : normalizeDate(new Date());
 
     const progress = Math.min(
-        monthlyOfLatestYear.reduce((sum, m) => {
-            const monthIndex = m.month - 1;
-            const maxDays = getDaysInMonth(dataLatestYear.year, monthIndex);
+        allMonthlyData.reduce((sum, m) => {
+            const yearOfMonth = yearByScheduleId.get(m.yearlyScheduleId);
+            if (yearOfMonth == null) return sum;
 
-            const validDays = m.days.filter((day) => {
+            const monthIndex = m.month - 1;
+            const maxDays = getDaysInMonth(yearOfMonth, monthIndex);
+
+            const validDays = m.days.filter(day => {
                 if (day > maxDays) return false;
-                const lessonDate = normalizeDate(new Date(dataLatestYear.year, monthIndex, day));
+
+                const lessonDate = normalizeDate(
+                    new Date(yearOfMonth, monthIndex, day)
+                );
+
                 return lessonDate >= startDateOfMonth;
             });
 
@@ -92,7 +120,6 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
     );
 
     const remaining = Math.max(8 - progress, 0);
-
 
     return (
         <section className="space-y-6">
@@ -111,17 +138,12 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                     <span className="text-sm text-gray-600">Năm</span>
                     <select
                         value={selectedYear}
-                        onChange={(e) =>
-                            setSelectedYear(Number(e.target.value))
-                        }
-                        className="
-                            rounded-xl border border-emerald-200
+                        onChange={e => setSelectedYear(Number(e.target.value))}
+                        className="rounded-xl border border-emerald-200
                             bg-white px-4 py-2 text-sm font-medium
                             text-emerald-800
-                            focus:outline-none focus:ring-2 focus:ring-emerald-300
-                        "
-                    >
-                        {years.map((year) => (
+                            focus:outline-none focus:ring-2 focus:ring-emerald-300">
+                        {years.map(year => (
                             <option key={year} value={year}>
                                 {year}
                             </option>
@@ -148,64 +170,71 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                     </thead>
 
                     <tbody className="divide-y divide-emerald-100">
-                        {monthlyData.map((month) => (
-                            <tr key={month.id} className="hover:bg-emerald-50/50 transition">
-                                <td className="px-6 py-5 font-medium text-gray-900 text-center">
-                                    {getMonthName(month.month)}
-                                </td>
+                        {monthlyData.map(month => {
+                            const yearOfMonth = yearByScheduleId.get(month.yearlyScheduleId);
+                            if (yearOfMonth == null) return null;
 
-                                <td className="px-6 py-5 text-center">
-                                    <span
-                                        className={`
-                                            inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold
-                                            ${month.days.length > 0
+                            const monthIndex = month.month - 1;
+                            const daysInMonth = getDaysInMonth(
+                                yearOfMonth,
+                                monthIndex
+                            );
+
+                            return (
+                                <tr
+                                    key={month.id}
+                                    className="hover:bg-emerald-50/50 transition"
+                                >
+                                    <td className="px-6 py-5 font-medium text-gray-900 text-center">
+                                        {getMonthName(month.month)}
+                                    </td>
+
+                                    <td className="px-6 py-5 text-center">
+                                        <span
+                                            className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${month.days.length > 0
                                                 ? 'bg-emerald-100 text-emerald-700'
-                                                : 'bg-red-100 text-red-600'}
-                                        `}
-                                    >
-                                        {month.days.length}
-                                    </span>
-                                </td>
+                                                : 'bg-red-100 text-red-600'
+                                                }`}
+                                        >
+                                            {month.days.length}
+                                        </span>
+                                    </td>
 
-                                <td className="px-6 py-5">
-                                    <div className="flex flex-wrap gap-2 max-w-[520px]">
-
-                                        {(() => {
-                                            const monthIndex = month.month - 1;
-                                            const daysInMonth = getDaysInMonth(dataLatestYear.year, monthIndex);
-
-                                            return Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
-                                                const isAttended = month.days.includes(day);
+                                    <td className="px-6 py-5">
+                                        <div className="flex flex-wrap gap-2 max-w-[520px]">
+                                            {Array.from(
+                                                { length: daysInMonth },
+                                                (_, i) => i + 1
+                                            ).map(day => {
+                                                const isAttended =
+                                                    month.days.includes(day);
 
                                                 return (
                                                     <span
                                                         key={day}
-                                                        title={isAttended
-                                                            ? `Ngày ${day}: Đã tham dự`
-                                                            : `Ngày ${day}: Vắng`}
-                                                        className={`
-                                                            flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition
-                                                            ${isAttended
-                                                                ? 'bg-emerald-600 text-white'
-                                                                : 'bg-gray-100 text-gray-400'}
-                                                        `}
+                                                        title={
+                                                            isAttended
+                                                                ? `Ngày ${day}: Đã tham dự`
+                                                                : `Ngày ${day}: Vắng`
+                                                        }
+                                                        className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${isAttended
+                                                            ? 'bg-emerald-600 text-white'
+                                                            : 'bg-gray-100 text-gray-400'
+                                                            }`}
                                                     >
                                                         {day}
                                                     </span>
                                                 );
-                                            });
-                                        })()}
-
-                                    </div>
-                                </td>
-
-                            </tr>
-                        ))}
+                                            })}
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
 
-            {/* LỊCH HỌC HÀNG TUẦN */}
             <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
@@ -223,20 +252,39 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                         <table className="min-w-full border-collapse">
                             <thead className="bg-emerald-50">
                                 <tr>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Thứ</th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Giờ học</th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Môn học</th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">Địa điểm</th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Thứ
+                                    </th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Giờ học
+                                    </th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Môn học
+                                    </th>
+                                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase text-emerald-700">
+                                        Địa điểm
+                                    </th>
                                 </tr>
                             </thead>
 
                             <tbody className="divide-y divide-emerald-100">
                                 {scheduleItems.map((item) => (
-                                    <tr key={item.id} className="transition hover:bg-emerald-50/50">
-                                        <td className="px-5 py-4 font-medium text-gray-900">{item.day}</td>
-                                        <td className="px-5 py-4 text-gray-700">{item.time}</td>
-                                        <td className="px-5 py-4 text-gray-700">{item.subject}</td>
-                                        <td className="px-5 py-4 text-gray-600">{item.location}</td>
+                                    <tr
+                                        key={item.id}
+                                        className="transition hover:bg-emerald-50/50"
+                                    >
+                                        <td className="px-5 py-4 font-medium text-gray-900">
+                                            {item.day}
+                                        </td>
+                                        <td className="px-5 py-4 text-gray-700">
+                                            {item.time}
+                                        </td>
+                                        <td className="px-5 py-4 text-gray-700">
+                                            {item.subject}
+                                        </td>
+                                        <td className="px-5 py-4 text-gray-600">
+                                            {item.location}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -246,7 +294,7 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
             </div>
             {/* ================= END LỊCH HỌC ================= */}
 
-            {/* ================= CHI TIẾT BUỔI HỌC ================= */}
+            {/* CHI TIẾT BUỔI HỌC */}
             <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
                 <div className="mb-6 flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
@@ -258,48 +306,63 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                 </div>
 
                 <div className="relative rounded-xl border border-emerald-100 bg-emerald-50 p-5">
-                    {/* Timeline line */}
-                    <div className="absolute left-6 top-6 bottom-6 w-px bg-emerald-300"></div>
+                    <div className="absolute left-6 top-6 bottom-6 w-px bg-emerald-300" />
 
                     <div className="space-y-6">
-                        {/* Start date */}
-                        <div className="relative flex items-center gap-4 pl-10 mb-10">
-                            <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600"></span>
+                        <div className="relative flex items-center gap-4 pl-10">
+                            <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600" />
                             <div>
-                                <p className="text-xs uppercase text-emerald-600 mb-2">Bắt đầu tính buổi</p>
-                                <p className="font-semibold text-gray-900">{startDateOfMonth.toLocaleDateString('vi-VN')}</p>
+                                <p className="text-xs uppercase text-emerald-600 mb-2">
+                                    Bắt đầu tính buổi
+                                </p>
+                                <p className="font-semibold text-gray-900">
+                                    {startDateOfMonth.toLocaleDateString('vi-VN')}
+                                </p>
                             </div>
                         </div>
 
-                        {/* Progress */}
-                        <div className="relative flex items-center gap-4 pl-10 mb-10">
-                            <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600"></span>
+                        <div className="relative flex items-center gap-4 pl-10">
+                            <span className="absolute left-3 h-3 w-3 rounded-full bg-emerald-600" />
                             <div className="w-full">
-                                <p className="text-xs uppercase text-emerald-600 mb-2">Tiến độ buổi học</p>
+                                <p className="text-xs uppercase text-emerald-600 mb-2">
+                                    Tiến độ buổi học
+                                </p>
                                 <div className="flex items-center gap-3">
                                     <div className="flex-1 h-3 rounded-full bg-emerald-200 overflow-hidden">
                                         <div
-                                            className={`h-full ${progress >= 8 ? 'bg-red-600' : 'bg-emerald-600'}`}
-                                            style={{ width: `${Math.min((progress / 8) * 100, 100)}%` }}
+                                            className={`h-full ${progress >= 8
+                                                ? 'bg-red-600'
+                                                : 'bg-emerald-600'
+                                                }`}
+                                            style={{
+                                                width: `${Math.min(
+                                                    (progress / 8) * 100,
+                                                    100
+                                                )}%`,
+                                            }}
                                         />
                                     </div>
-                                    <span className="text-sm font-semibold text-gray-900">{progress} / 8</span>
+                                    <span className="text-sm font-semibold text-gray-900">
+                                        {progress} / 8
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Remaining */}
                         <div className="relative flex items-center gap-4 pl-10">
-                            <span className="absolute left-3 h-3 w-3 rounded-full bg-gray-400"></span>
+                            <span className="absolute left-3 h-3 w-3 rounded-full bg-gray-400" />
                             <div>
-                                <p className="text-xs uppercase text-gray-600 mb-2">Buổi còn lại</p>
-                                <p className="font-semibold text-gray-900">{remaining}</p>
+                                <p className="text-xs uppercase text-gray-600 mb-2">
+                                    Buổi còn lại
+                                </p>
+                                <p className="font-semibold text-gray-900">
+                                    {remaining}
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* ================= END ================= */}
         </section>
     );
 }

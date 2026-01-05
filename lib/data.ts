@@ -28,6 +28,7 @@ export interface MonthlyAttendance {
 export interface YearlySchedule {
     id: number;
     year: number;
+    studentEmail: string;
     monthlyData?: MonthlyAttendance[];
 }
 

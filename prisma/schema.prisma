@@ -53,12 +53,11 @@ model ScheduleItem {
 
 model YearlySchedule {
   id           Int           @id @default(autoincrement())
-  year         Int
   studentEmail String
+  year         Int
   monthlyData  MonthlyData[]
   student      Student       @relation(fields: [studentEmail], references: [email])
 
-  @@unique([studentEmail, year])
   @@map("yearly_schedule")
 }
 
