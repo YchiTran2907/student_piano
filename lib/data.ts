@@ -208,7 +208,11 @@ export async function getAllStudents(delFlg?: number): Promise<StudentData[]> {
             include: {
                 scheduleItems: true,
                 awards: true,
-                yearlySchedules: true
+                yearlySchedules: {
+                    orderBy: {
+                        year: 'desc',
+                    },
+                },
             },
             orderBy: {
                 id: "asc",
