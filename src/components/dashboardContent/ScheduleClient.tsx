@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { YearlySchedule, ScheduleItem } from '../../../lib/data';
 
+// Constants
+const DEFAULT_VISIBLE_MONTHS = 1;
+
 function getMonthName(month: number): string {
     const monthNames = [
         "Tháng 1",
@@ -121,6 +124,11 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
 
     const remaining = Math.max(8 - progress, 0);
 
+    const [showAllMonths, setShowAllMonths] = useState(false);
+    const visibleMonths = showAllMonths
+        ? monthlyData
+        : monthlyData.slice(-DEFAULT_VISIBLE_MONTHS);
+
     return (
         <section className="space-y-6">
 
@@ -154,85 +162,78 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
 
             {/* TABLE */}
             <div className="overflow-hidden rounded-2xl border border-emerald-200 bg-white shadow-sm">
-                <table className="min-w-full border-collapse">
-                    <thead className="bg-emerald-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-emerald-700">
-                                Tháng
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-emerald-700">
-                                Tổng số buổi
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-emerald-700">
-                                Chi tiết ngày
-                            </th>
-                        </tr>
-                    </thead>
+                <div className="divide-y divide-emerald-100">
+                    {visibleMonths.map(month => {
+                        const yearOfMonth = yearByScheduleId.get(month.yearlyScheduleId);
+                        if (yearOfMonth == null) return null;
 
-                    <tbody className="divide-y divide-emerald-100">
-                        {monthlyData.map(month => {
-                            const yearOfMonth = yearByScheduleId.get(month.yearlyScheduleId);
-                            if (yearOfMonth == null) return null;
+                        const monthIndex = month.month - 1;
+                        const daysInMonth = getDaysInMonth(yearOfMonth, monthIndex);
+                        const firstDayOfWeek = new Date(
+                            yearOfMonth,
+                            monthIndex,
+                            1
+                        ).getDay();
 
-                            const monthIndex = month.month - 1;
-                            const daysInMonth = getDaysInMonth(
-                                yearOfMonth,
-                                monthIndex
-                            );
+                        return (
+                            <div key={month.id} className="px-5 py-6">
+                                {/* Header */}
+                                <div className="mb-4 flex items-center justify-between">
+                                    <h3 className="text-lg font-semibold text-gray-900">
+                                        {getMonthName(month.month)} {yearOfMonth}
+                                    </h3>
+                                </div>
 
-                            return (
-                                <tr
-                                    key={month.id}
-                                    className="hover:bg-emerald-50/50 transition"
-                                >
-                                    <td className="px-6 py-5 font-medium text-gray-900 text-center">
-                                        {getMonthName(month.month)}
-                                    </td>
+                                {/* Weekdays */}
+                                <div className="mb-2 grid grid-cols-7 text-center text-xs font-semibold text-gray-400">
+                                    {['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'].map(d => (
+                                        <div key={d}>{d}</div>
+                                    ))}
+                                </div>
 
-                                    <td className="px-6 py-5 text-center">
-                                        <span
-                                            className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${month.days.length > 0
-                                                ? 'bg-emerald-100 text-emerald-700'
-                                                : 'bg-red-100 text-red-600'
-                                                }`}
-                                        >
-                                            {month.days.length}
-                                        </span>
-                                    </td>
+                                {/* Calendar grid */}
+                                <div className="grid grid-cols-7 gap-2 justify-items-center">
+                                    {Array.from({ length: firstDayOfWeek }).map((_, i) => (
+                                        <div key={`empty-${i}`} />
+                                    ))}
 
-                                    <td className="px-6 py-5">
-                                        <div className="flex flex-wrap gap-2 max-w-[520px]">
-                                            {Array.from(
-                                                { length: daysInMonth },
-                                                (_, i) => i + 1
-                                            ).map(day => {
-                                                const isAttended =
-                                                    month.days.includes(day);
+                                    {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
+                                        const isAttended = month.days.includes(day);
 
-                                                return (
-                                                    <span
-                                                        key={day}
-                                                        title={
-                                                            isAttended
-                                                                ? `Ngày ${day}: Đã tham dự`
-                                                                : `Ngày ${day}: Vắng`
-                                                        }
-                                                        className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${isAttended
-                                                            ? 'bg-emerald-600 text-white'
-                                                            : 'bg-gray-100 text-gray-400'
-                                                            }`}
-                                                    >
-                                                        {day}
-                                                    </span>
-                                                );
-                                            })}
-                                        </div>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                                        return (
+                                            <div
+                                                key={day}
+                                                title={
+                                                    isAttended
+                                                        ? `Ngày ${day}: Đã tham dự`
+                                                        : `Ngày ${day}: Vắng`
+                                                }
+                                                className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition ${isAttended
+                                                        ? 'bg-emerald-600 text-white'
+                                                        : 'bg-gray-100 text-gray-400'
+                                                    }`}
+                                            >
+                                                {day}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* TOGGLE */}
+                {monthlyData.length > DEFAULT_VISIBLE_MONTHS && (
+                    <div className="flex justify-center border-t border-emerald-100 py-4">
+                        <button
+                            onClick={() => setShowAllMonths(prev => !prev)}
+                            className="text-sm font-semibold text-emerald-600 hover:underline"
+                        >
+                            {showAllMonths ? 'Thu gọn' : 'Xem thêm'}
+                        </button>
+                    </div>
+                )}
             </div>
 
             <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">

@@ -1,3 +1,4 @@
+import { JSX } from 'react/jsx-runtime';
 import prisma from './prisma';
 import { notFound } from 'next/navigation';
 
@@ -96,6 +97,29 @@ export type GroupedStudentSchedule = {
     schedules: ScheduleItem[];
 };
 
+export type Contest = {
+    id: number;
+    title: string;
+    organizer: string;
+    location: string;
+    year: number;
+    description: string;
+    link: string;
+    highlight?: boolean;
+};
+
+export type ContestRegister = {
+    id: number;
+    studentEmail: string;
+    pieces: string[];
+    competitionId: number;
+    contest: {
+        title: string;
+    }
+    student: {
+        name: string;
+    }
+};
 
 export async function getAccountDataByEmail(email: string): Promise<Accounts> {
     try {
@@ -256,3 +280,43 @@ export async function getGroupedStudentSchedules(delFlg: number) {
     return grouped;
 }
 
+export async function getAllContests(): Promise<Contest[]> {
+    try {
+        const contests = await prisma.contest.findMany({
+            orderBy: {
+                year: 'desc',
+            },
+        });
+
+        return contests as Contest[];
+    } catch (error) {
+        console.error("DATABASE ERROR: Failed to fetch all contests.", error);
+        throw new Error("Failed to fetch all contests.");
+    }
+}
+
+export async function getAllContestRegisters(): Promise<ContestRegister[]> {
+    try {
+        const contestRegisters = await prisma.contestRegister.findMany({
+            orderBy: {
+                id: 'asc',
+            },
+            include: {
+                student : {
+                    select: {
+                        name: true,
+                    }
+                },
+                contest : {
+                    select: {
+                        title: true,
+                    }
+                },
+            },
+        });
+        return contestRegisters as ContestRegister[];
+    } catch (error) {
+        console.error("DATABASE ERROR: Failed to fetch all contest registrations.", error);
+        throw new Error("Failed to fetch all contest registrations.");
+    }
+}

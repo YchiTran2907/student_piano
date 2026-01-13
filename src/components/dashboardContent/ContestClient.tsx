@@ -2,44 +2,13 @@
 
 import React from "react";
 import { MapPin, ExternalLink, FileText } from "lucide-react";
+import { Contest } from "../../../lib/data";
 
-interface Competition {
-    id: number;
-    title: string;
-    organizer: string;
-    location: string;
-    year: number;
-    description: string;
-    link: string;
-    highlight?: boolean;
+interface ContestClientProps {
+    contestData: Contest[];
 }
 
-const competitions: Competition[] = [
-    {
-        id: 1,
-        title: "Associated Board of the Royal Schools of Music (ABRSM)",
-        organizer: "Royal Academy of Music, Royal College of Music, Royal Northern College of Music, Royal Conservatoire of Scotland",
-        location: "Hà Nội, Tp HCM",
-        year: 2026,
-        description:
-            "ABRSM (Associated Board of the Royal Schools of Music) là hệ thống thi và cấp chứng chỉ âm nhạc uy tín hàng đầu thế giới, được thành lập năm 1889 (Anh Quốc). Là chứng chỉ được công nhận tại hơn 90 quốc gia và có giá trị trong hồ sơ học thuật, du học, xét tuyển / cộng điểm tại một số hệ thống giáo dục...",
-        link: "https://www.abrsm.org/en-vn",
-        highlight: true,
-    },
-    {
-        id: 2,
-        title: "Chicago International Music Competition ",
-        organizer: "International Institute of Piano Artistry",
-        location: "TP HCM, Thái Lan, Chicago (Mỹ)",
-        year: 2026,
-        description:
-            "Cuộc thi Âm nhạc Quốc Tế Chicago (Chicago International Music Competition – CIMC) là điểm đến của những nghệ sĩ trẻ từ khắp thế giới. Không chỉ dừng lại ở cuộc thi, CIMC là sân khấu để tỏa sáng, là nền tảng phát triển sự nghiệp và là mạng lưới kết nối những tài năng có chung khát vọng chinh phục nghệ thuật. Hàng năm, cuộc thi quy tụ rất nhiều nghệ sĩ trẻ từ khắp nơi trên thế giới đến tranh tài, với hi vọng cuộc thi là bệ phóng cho sự nghiệp thành công của các thí sinh tham gia. Các thí sinh tham gia sẽ có cơ hội nhận các giải thưởng tiền mặt và trình diễn tại các sân khấu lớn trên thế giới. Cuộc thi có sự góp mặt của đội ngũ ban giám khảo dày dạn kinh nghiệm và nổi tiếng trên thế giới...",
-        link: "https://cimc-usa.asia/cuoc-thi/",
-        highlight: true,
-    }
-];
-
-export default function ContestClient() {
+export default function ContestClient({ contestData }: ContestClientProps) {
     return (
         <section className="space-y-20">
 
@@ -72,14 +41,9 @@ export default function ContestClient() {
             <div className="relative mt-16 space-y-12">
                 <div className="absolute left-6 top-0 bottom-0 w-px bg-slate-200" />
 
-                {competitions.map((c) => (
+                {contestData.map((c) => (
                     <div key={c.id} className="relative pl-20">
-                        {/* DOT */}
-                        <div
-                            className={`absolute left-3 top-2 h-6 w-6 rounded-full border-4 bg-white
-                ${c.highlight ? "border-indigo-500" : "border-slate-300"}`}
-                        />
-
+                        <div className={`absolute left-3 top-2 h-6 w-6 rounded-full border-4 bg-white ${c.highlight ? "border-indigo-500" : "border-slate-300"}`} />
                         <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm">
                             <div className="flex items-center justify-between gap-4">
                                 <h3 className="text-lg font-semibold text-slate-900">
@@ -104,10 +68,7 @@ export default function ContestClient() {
                                 </p>
                             </div>
 
-                            <a
-                                href={c.link} target="_blank" rel="noopener noreferrer"
-                                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:underline"
-                            >
+                            <a href={c.link} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:underline">
                                 Xem chi tiết
                                 <ExternalLink size={14} />
                             </a>
@@ -116,13 +77,6 @@ export default function ContestClient() {
                 ))}
             </div>
 
-
-            {/* ================= FOOTER NOTE ================= */}
-            <div className="rounded-3xl bg-indigo-50 border border-indigo-200 p-8">
-                <p className="text-sm leading-relaxed text-indigo-700">
-                    Các cuộc thi được lựa chọn phù hợp với độ tuổi và năng lực của học sinh, nhằm tạo điều kiện cho các con được trải nghiệm, học hỏi và rèn luyện sự tự tin khi biểu diễn trên sân khấu. Đồng thời, đây cũng là bước đệm quan trọng giúp các con từng bước hướng tới những mục tiêu lớn hơn trong tương lai.
-                </p>
-            </div>
         </section>
     );
 }

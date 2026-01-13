@@ -17,24 +17,25 @@ model Account {
 }
 
 model Student {
-  id              Int              @id @default(autoincrement())
-  email           String           @unique
-  name            String
-  parentName      String
-  contact         String
-  age             Int
-  grade           String
-  className       String
-  teacher         String
-  totalSessions   Int
-  attended        Int
-  fee             String
-  del_flg         Int?
-  awards          Award[]
-  evaluations     Evaluation[]
-  progresses      Progress[]
-  scheduleItems   ScheduleItem[]
-  yearlySchedules YearlySchedule[]
+  id               Int                @id @default(autoincrement())
+  email            String             @unique
+  name             String
+  parentName       String
+  contact          String
+  age              Int
+  grade            String
+  className        String
+  teacher          String
+  totalSessions    Int
+  attended         Int
+  fee              String
+  del_flg          Int?
+  awards           Award[]
+  contest_register ContestRegister[]
+  evaluations      Evaluation[]
+  progresses       Progress[]
+  scheduleItems    ScheduleItem[]
+  yearlySchedules  YearlySchedule[]
 
   @@map("student")
 }
@@ -107,4 +108,29 @@ model Award {
   student      Student  @relation(fields: [studentEmail], references: [email])
 
   @@map("award")
+}
+
+model ContestRegister {
+  id            Int      @id
+  studentEmail  String?  @db.VarChar
+  pieces        Json?    @db.Json
+  competitionId Int?
+  contest       Contest? @relation(fields: [competitionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constest_register_competitionId")
+  student       Student? @relation(fields: [studentEmail], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "constest_register_studentEmail")
+
+  @@map("contest_register")
+}
+
+model Contest {
+  id               Int                @id
+  title            String?            @db.VarChar
+  organizer        String?            @db.VarChar
+  location         String?            @db.VarChar
+  year             Int?
+  description      String?
+  link             String?            @db.VarChar
+  highlight        Boolean?
+  contest_register ContestRegister[]
+
+  @@map("contest")
 }

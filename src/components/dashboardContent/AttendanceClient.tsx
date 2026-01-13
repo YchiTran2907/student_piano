@@ -16,7 +16,6 @@ export default function AttendanceClient({ dataAllStudents }: AttendanceClientPr
         try {
             setLoadingIds((prev) => [...prev, studentData.id]);
             const studentId = studentData.yearlySchedules[0].id;
-            console.log(studentData);
             const res = await fetch("/api/attendance/checkin", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
