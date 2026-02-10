@@ -55,7 +55,9 @@ export async function POST(req: Request) {
                     type: "update",
                     where: { id: currentMonth.id },
                     data: {
-                        days: [...currentMonth.days, day],
+                        days: {
+                            set: [...currentMonth.days, day],
+                        },
                     },
                 },
             ];
