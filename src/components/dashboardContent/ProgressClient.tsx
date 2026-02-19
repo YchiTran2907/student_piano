@@ -2,11 +2,26 @@
 
 import React, { useState } from 'react';
 import { BookOpen, Target, Layers, Star, ChevronDown } from 'lucide-react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+import {
+    Radar,
+    RadarChart,
+    PolarGrid,
+    PolarAngleAxis,
+    PolarRadiusAxis,
+    ResponsiveContainer
+} from 'recharts';
 import { ProgressAndEvaluation, Scores } from '../../../lib/data';
 
-function formatDate(date: Date) {
+/* ========= Helpers ========= */
+
+function formatDate(date: Date | string) {
     return new Date(date).toLocaleDateString('vi-VN');
+}
+
+function getWeekNumber(baseDate: Date, currentDate: Date) {
+    const diffTime = currentDate.getTime() - baseDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return Math.floor(diffDays / 7) + 1;
 }
 
 const getProgressIcon = (type: string) => {
@@ -96,87 +111,171 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
 
             {/* ===================== PROGRESS ===================== */}
             {progress.length > 0 && (
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {Object.entries(grouped).map(([title, items]) => {
-                        const firstItemType = items.length > 0 ? items[0].type : "default";
-                        const headerIcon = getProgressIcon(firstItemType);
-                        const borderColor = colorMap[firstItemType] || colorMap["default"];
-                        const latestDate = Math.max(
-                            ...progress.map(p => new Date(p.date).getTime())
-                        );
-                        const hasNewestItem = items.some(
-                            item => new Date(item.date).getTime() === latestDate
-                        );
 
                         const [isOpen, setIsOpen] = useState(false);
 
+                        const objectiveItem = items.find((i: any) => i.type === "Mục tiêu");
+                        const baseDate: Date | null = objectiveItem
+                            ? new Date(objectiveItem.date)
+                            : null;
+                        const weeks: Record<number, any[]> = {};
+                        const evaluationsInProgress: any[] = [];
+                        const others: any[] = [];
+
+                        items.forEach((item: any) => {
+
+                            if (item.type === "Mục tiêu") return;
+
+                            if (item.type === "Đánh giá") {
+                                evaluationsInProgress.push(item);
+                                return;
+                            }
+
+                            if (item.type === "Bài học") {
+                                if (!baseDate) {
+                                    others.push(item);
+                                    return;
+                                }
+                                const currentDate = new Date(item.date);
+                                const diffTime = currentDate.getTime() - baseDate.getTime();
+                                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                                const weekNumber = Math.floor(diffDays / 7) + 1;
+
+                                if (!weeks[weekNumber]) weeks[weekNumber] = [];
+                                weeks[weekNumber].push(item);
+                                return;
+                            }
+
+                            others.push(item);
+                        });
+
                         return (
-                            <div key={title} className="relative ml-4 border-l-4 border-emerald-200">
+                            <div
+                                key={title}
+                                className="rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden"
+                            >
+                                {/* HEADER */}
                                 <div
-                                    className="flex items-center cursor-pointer gap-4 p-4 bg-white rounded-xl shadow-sm hover:bg-emerald-50 transition"
                                     onClick={() => setIsOpen(!isOpen)}
+                                    className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-stone-50 transition"
                                 >
-                                    <div
-                                        className={`flex items-center justify-center rounded-full bg-white border-4 h-10 w-10 border-${borderColor}-500 shadow-lg flex-shrink-0`}
-                                    >
-                                        {headerIcon}
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-100">
+                                            <Layers size={20} className="text-emerald-700" />
+                                        </div>
+                                        <h3 className="text-md font-semibold text-stone-800">
+                                            {title}
+                                        </h3>
                                     </div>
-                                    <h3 className="text-md font-bold text-emerald-800">{title}</h3>
-                                    {hasNewestItem && (
-                                        <span className="mr-2 align-middle text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
-                                            NEW
-                                        </span>
-                                    )}
+
                                     <ChevronDown
                                         size={20}
-                                        className={`flex-shrink-0 text-emerald-500 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
+                                        className={`text-stone-500 transition-transform duration-500 ease-in-out ${isOpen ? "rotate-180" : "rotate-0"
                                             }`}
                                     />
                                 </div>
 
-                                {/* CONTENT */}
-                                <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr]"}`}>
-                                    <div className="overflow-hidden">
-                                        <div className="rounded-2xl bg-white border border-emerald-200 p-6 shadow-sm flex flex-col gap-4">
-                                            {items.map((item: any, index: number) => {
-                                                const isEvaluation = item.type === "Đánh giá";
-                                                const isObjective = item.type === "Mục tiêu";
-                                                return (
-                                                    <div key={index} className="flex items-start gap-4">
-                                                        <div
-                                                            className={`flex-1 rounded-xl p-4 shadow-sm w-full
-                                                        ${isEvaluation
-                                                                    ? "bg-yellow-50 border border-yellow-200 text-yellow-900"
-                                                                    : isObjective
-                                                                        ? "bg-blue-50 border border-blue-200 text-blue-900"
-                                                                        : "bg-emerald-50 border border-emerald-100 text-gray-700"
-                                                                }`}
-                                                        >
-                                                            <span
-                                                                className={`inline-block mb-1 text-xs font-semibold uppercase px-2 py-1 rounded-full
-                                                        ${isEvaluation
-                                                                        ? "bg-yellow-200 text-yellow-800"
-                                                                        : "bg-emerald-100 text-emerald-700"
-                                                                    }`}
-                                                            >
-                                                                {item.type}
-                                                            </span>
-                                                            <p className="text-xs mt-1 text-gray-500">
-                                                                {formatDate(item.date)}
-                                                            </p>
-                                                            <p className="mt-1 whitespace-pre-line">
-                                                                {index === 1 && (
-                                                                    <span className="mr-2 align-middle text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
-                                                                        NEW
-                                                                    </span>
-                                                                )}
-                                                                {item.description}
-                                                            </p>
+                                {/* CONTENT ANIMATION */}
+                                <div
+                                    className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+                                        }`}
+                                >
+                                    <div className="bg-stone-50 px-6 py-6 space-y-8 border-t border-stone-200">
+
+                                        {/* 🎯 MỤC TIÊU */}
+                                        {objectiveItem && (
+                                            <div className="rounded-xl bg-blue-50 border border-blue-200 p-5">
+                                                <p className="text-xs font-semibold uppercase text-blue-600 mb-1">
+                                                    Mục tiêu
+                                                </p>
+                                                <p className="text-xs text-gray-500 mb-2">
+                                                    {formatDate(objectiveItem.date)}
+                                                </p>
+                                                <p className="text-blue-900 whitespace-pre-line">
+                                                    {objectiveItem.description}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {Object.keys(weeks).length > 0 && (
+                                            <div className="space-y-6">
+                                                {Object.entries(weeks)
+                                                    .sort((a, b) => Number(a[0]) - Number(b[0]))
+                                                    .map(([week, weekItems]) => (
+                                                        <div key={week} className="space-y-3">
+
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="h-6 w-6 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center font-bold">
+                                                                    {week}
+                                                                </div>
+                                                                <h4 className="text-sm font-semibold text-emerald-800">
+                                                                    Tuần {week}
+                                                                </h4>
+                                                            </div>
+
+                                                            <div className="space-y-3 pl-8 border-l-2 border-emerald-200">
+                                                                {weekItems.map((item: any, index: number) => (
+                                                                    <div
+                                                                        key={index}
+                                                                        className="bg-white border border-emerald-100 rounded-lg p-4 shadow-sm"
+                                                                    >
+                                                                        {/* <p className="text-xs text-gray-500 mb-1">
+                                                                            {formatDate(item.date)}
+                                                                        </p> */}
+                                                                        <p className="text-gray-800 whitespace-pre-line">
+                                                                            {item.description}
+                                                                        </p>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
                                                         </div>
+                                                    ))}
+                                            </div>
+                                        )}
+                                        {/* ⭐ ĐÁNH GIÁ */}
+                                        {evaluationsInProgress.length > 0 && (
+                                            <div className="space-y-3">
+                                                <h4 className="text-sm font-semibold text-yellow-700">
+                                                    Đánh giá
+                                                </h4>
+                                                {evaluationsInProgress.map((item: any, index: number) => (
+                                                    <div
+                                                        key={index}
+                                                        className="rounded-xl bg-yellow-50 border border-yellow-200 p-4"
+                                                    >
+                                                        <p className="text-xs text-gray-500 mb-1">
+                                                            {formatDate(item.date)}
+                                                        </p>
+                                                        <p className="text-yellow-900 whitespace-pre-line">
+                                                            {item.description}
+                                                        </p>
                                                     </div>
-                                                );
-                                            })}
-                                        </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {/* 📌 MỤC KHÁC */}
+                                        {others.length > 0 && (
+                                            <div className="space-y-3">
+                                                <h4 className="text-sm font-semibold text-stone-700">
+                                                    Thông tin khác
+                                                </h4>
+                                                {others.map((item: any, index: number) => (
+                                                    <div
+                                                        key={index}
+                                                        className="rounded-xl bg-stone-100 border border-stone-200 p-4"
+                                                    >
+                                                        <p className="text-xs text-gray-500 mb-1">
+                                                            {formatDate(item.date)}
+                                                        </p>
+                                                        <p className="text-stone-800 whitespace-pre-line">
+                                                            {item.description}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
