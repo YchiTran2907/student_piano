@@ -179,7 +179,7 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
 
                                 {/* CONTENT ANIMATION */}
                                 <div
-                                    className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+                                    className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? "opacity-100" : "max-h-0 opacity-0"
                                         }`}
                                 >
                                     <div className="bg-stone-50 px-6 py-6 space-y-8 border-t border-stone-200">
@@ -199,41 +199,34 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                             </div>
                                         )}
 
-                                        {Object.keys(weeks).length > 0 && (
-                                            <div className="space-y-6">
-                                                {Object.entries(weeks)
-                                                    .sort((a, b) => Number(a[0]) - Number(b[0]))
-                                                    .map(([week, weekItems]) => (
-                                                        <div key={week} className="space-y-3">
+                                        {Object.entries(weeks)
+                                        .sort((a, b) => Number(b[0]) - Number(a[0])) // đảo: mới nhất lên trên
+                                        .map(([week, weekItems], idx, arr) => (
+                                            <div key={week} className="space-y-3">
 
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="h-6 w-6 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center font-bold">
-                                                                    {week}
-                                                                </div>
-                                                                <h4 className="text-sm font-semibold text-emerald-800">
-                                                                    Tuần {week}
-                                                                </h4>
-                                                            </div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-6 w-6 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center font-bold">
+                                                        {arr.length - idx}
+                                                    </div>
+                                                    <h4 className="text-sm font-semibold text-emerald-800">
+                                                        Lần {arr.length - idx}
+                                                    </h4>
+                                                </div>
 
-                                                            <div className="space-y-3 pl-8 border-l-2 border-emerald-200">
-                                                                {weekItems.map((item: any, index: number) => (
-                                                                    <div
-                                                                        key={index}
-                                                                        className="bg-white border border-emerald-100 rounded-lg p-4 shadow-sm"
-                                                                    >
-                                                                        {/* <p className="text-xs text-gray-500 mb-1">
-                                                                            {formatDate(item.date)}
-                                                                        </p> */}
-                                                                        <p className="text-gray-800 whitespace-pre-line">
-                                                                            {item.description}
-                                                                        </p>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
+                                                <div className="space-y-3 pl-8 border-l-2 border-emerald-200">
+                                                    {weekItems.map((item: any, index: number) => (
+                                                        <div
+                                                            key={index}
+                                                            className="bg-white border border-emerald-100 rounded-lg p-4 shadow-sm"
+                                                        >
+                                                            <p className="text-gray-800 whitespace-pre-line">
+                                                                {item.description}
+                                                            </p>
                                                         </div>
                                                     ))}
+                                                </div>
                                             </div>
-                                        )}
+                                        ))}
                                         {/* ⭐ ĐÁNH GIÁ */}
                                         {evaluationsInProgress.length > 0 && (
                                             <div className="space-y-3">
