@@ -159,8 +159,12 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                 {/* HEADER */}
                                 <div
                                     onClick={() => setIsOpen(!isOpen)}
-                                    className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-stone-50 transition"
-                                >
+                                    className={`flex items-center justify-between px-6 py-4 cursor-pointer
+                                        transition-all duration-200
+                                        ${evaluationsInProgress.length > 0
+                                        ? "bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-400 hover:from-yellow-100 hover:to-yellow-200"
+                                        : "bg-white hover:bg-stone-50"
+                                    }`}>
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-100">
                                             <Layers size={20} className="text-emerald-700" />
@@ -211,6 +215,11 @@ export default function ProgressClient({ initialData }: ProgressClientProps) {
                                                     <h4 className="text-sm font-semibold text-emerald-800">
                                                         Lần {arr.length - idx}
                                                     </h4>
+                                                    {idx === 0 && (
+                                                        <span className="mr-2 text-[10px] font-bold bg-gradient-to-r from-red-500 to-pink-500 text-white px-2 py-0.5 rounded-full shadow-sm">
+                                                            NEW
+                                                        </span>
+                                                    )}
                                                 </div>
 
                                                 <div className="space-y-3 pl-8 border-l-2 border-emerald-200">
