@@ -59,6 +59,14 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         schedulesOfStudent.map(y => [y.id, y.year])
     );
 
+    const sortedMonthlyData = [...monthlyData].sort((a, b) => {
+        const yearA = yearByScheduleId.get(a.yearlyScheduleId) ?? 0;
+        const yearB = yearByScheduleId.get(b.yearlyScheduleId) ?? 0;
+
+        if (yearA !== yearB) return yearB - yearA;
+            return b.month - a.month;
+    });
+
     const allMonthlyData = schedulesOfStudent.flatMap(
         y => y.monthlyData ?? []
     );
@@ -126,8 +134,8 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
 
     const [showAllMonths, setShowAllMonths] = useState(false);
     const visibleMonths = showAllMonths
-        ? monthlyData
-        : monthlyData.slice(-DEFAULT_VISIBLE_MONTHS);
+        ? sortedMonthlyData
+        : sortedMonthlyData.slice(0, DEFAULT_VISIBLE_MONTHS);
 
     return (
         <section className="space-y-6">
