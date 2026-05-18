@@ -1,50 +1,114 @@
 'use client';
 
 import React from 'react';
-import { Mail, Phone, BookOpen, GraduationCap, User, DollarSign, Calendar } from 'lucide-react';
+import {
+    Mail,
+    Phone,
+    GraduationCap,
+    User,
+    DollarSign,
+    Calendar
+} from 'lucide-react';
+
 import { StudentData, YearlySchedule } from '../../../lib/data';
 
-const InfoCard = ({
+/* ---------- TIMELINE ITEM ---------- */
+
+const TimelineItem = ({
     title,
-    children
+    subtitle,
+    children,
+    Icon,
+    accent = 'teal'
 }: {
     title: string;
+    subtitle?: string;
     children: React.ReactNode;
-}) => (
-    <section className="rounded-2xl border border-emerald-200 bg-white shadow-sm hover:shadow-md transition">
-        <header className="flex items-center gap-2 px-6 py-4 border-b border-emerald-100">
-            <span className="h-2 w-2 rounded-full bg-emerald-600" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-800">
-                {title}
-            </h2>
-        </header>
+    Icon: React.ElementType;
+    accent?: 'sky' | 'teal' | 'orange' | 'fuchsia';
+}) => {
 
-        <div className="p-6">{children}</div>
-    </section>
-);
+    const accentMap = {
+        sky: {
+            bg: 'bg-sky-100',
+            text: 'text-sky-700',
+            line: 'from-sky-200 via-sky-100 to-transparent'
+        },
+        teal: {
+            bg: 'bg-teal-100',
+            text: 'text-teal-700',
+            line: 'from-teal-200 via-teal-100 to-transparent'
+        },
+        orange: {
+            bg: 'bg-orange-100',
+            text: 'text-orange-700',
+            line: 'from-orange-200 via-orange-100 to-transparent'
+        },
+        fuchsia: {
+            bg: 'bg-fuchsia-100',
+            text: 'text-fuchsia-700',
+            line: 'from-fuchsia-200 via-fuchsia-100 to-transparent'
+        }
+    };
 
-const DetailItem = ({
+    const style = accentMap[accent];
+
+    return (
+        <div className="group relative flex gap-5">
+
+            {/* ICON + LINE */}
+            <div className="relative flex flex-col items-center">
+                <div
+                    className={`
+                        z-10 flex h-12 w-12 items-center justify-center rounded-2xl
+                        ${style.bg} ${style.text}
+                        shadow-sm
+                        transition-all duration-300
+                        group-hover:scale-110 group-hover:rotate-3
+                    `}
+                >
+                    <Icon size={18} />
+                </div>
+
+                <div className={`mt-2 w-[2px] flex-1 bg-gradient-to-b ${style.line}`} />
+            </div>
+
+            {/* CONTENT */}
+            <div className="flex-1 pb-8">
+                <div className="rounded-3xl border border-slate-200/80 bg-white/90 p-5 shadow-sm backdrop-blur-md transition hover:-translate-y-1 hover:shadow-xl">
+
+                    <h3 className="text-lg font-bold tracking-tight text-slate-800">
+                        {title}
+                    </h3>
+
+                    {subtitle && (
+                        <p className="mt-1 text-sm text-slate-500">
+                            {subtitle}
+                        </p>
+                    )}
+
+                    <div className="mt-4">
+                        {children}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ---------- ROW ---------- */
+
+const DetailRow = ({
     label,
-    value,
-    Icon
+    value
 }: {
     label: string;
     value: string | number;
-    Icon: React.ElementType;
 }) => (
-    <div className="group flex items-start gap-4 rounded-xl border border-emerald-100 bg-emerald-50/60 p-4 hover:bg-white hover:border-emerald-300 transition">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 group-hover:bg-emerald-600 group-hover:text-white transition">
-            <Icon size={18} />
-        </div>
-
-        <div className="min-w-0">
-            <p className="text-[11px] font-medium uppercase tracking-wider text-emerald-600">
-                {label}
-            </p>
-            <p className="text-sm font-semibold text-gray-900 break-words">
-                {value}
-            </p>
-        </div>
+    <div className="flex items-center justify-between border-b border-slate-100 py-3 last:border-none hover:bg-slate-50/60 transition">
+        <span className="text-sm text-slate-500">{label}</span>
+        <span className="text-sm font-semibold text-slate-800">{value}</span>
     </div>
 );
 
@@ -53,82 +117,144 @@ const DetailItem = ({
 interface PersonalClientProps {
     initialData: StudentData;
     yearlySchedule: YearlySchedule[];
-    roleUser: string
+    roleUser: string;
 }
 
 export default function PersonalClient({
-    initialData: student, yearlySchedule: yearlySchedule, roleUser: roleUser
+    initialData: student,
+    yearlySchedule,
+    roleUser
 }: PersonalClientProps) {
+
     const initials = student.name
         .split(' ')
         .map((n) => n[0])
         .join('')
         .toUpperCase();
-    const minYear = yearlySchedule?.length ? Math.min(...yearlySchedule.map(y => y.year)) : undefined;
-    const lastYear = yearlySchedule?.length ? Math.max(...yearlySchedule.map(y => y.year)) : undefined;
+
+    const minYear = yearlySchedule?.length
+        ? Math.min(...yearlySchedule.map(y => y.year))
+        : undefined;
+
+    const lastYear = yearlySchedule?.length
+        ? Math.max(...yearlySchedule.map(y => y.year))
+        : undefined;
+
     return (
-        <div className="w-full space-y-6 bg-emerald-50 p-6 rounded-3xl">
+        <div className="w-full rounded-3xl bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6 font-sans">
 
-            {/* PROFILE SUMMARY */}
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-600 p-6 shadow-xl text-white">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-white text-3xl font-bold text-emerald-800">
-                    {initials}
+           {/* HEADER */}
+            <div className="mb-10 rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-md">
+                <div className="flex flex-col gap-5 md:flex-row md:items-center">
+                    {/* AVATAR */}
+                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 text-2xl font-bold text-white shadow-sm">
+                        {initials}
+                    </div>
+                    {/* INFO */}
+                    <div className="flex-1">
+                        <h1 className="text-2xl font-semibold text-slate-900">
+                            {student.name}
+                        </h1>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            <span className="rounded-xl bg-slate-100 px-3 py-1 text-sm text-slate-700">
+                                {student.age} tuổi
+                            </span>
+                            <span className="rounded-xl bg-slate-100 px-3 py-1 text-sm text-slate-700">
+                                {minYear ?? '-'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* TWO COLUMN TIMELINE */}
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+
+                {/* LEFT */}
+                <div className="space-y-6">
+
+                    <TimelineItem
+                        title="Thông tin liên hệ"
+                        subtitle="Thông tin phụ huynh, học sinh"
+                        Icon={Mail}
+                        accent="sky"
+                    >
+                        <DetailRow label="Tài khoản" value={student.email} />
+                        <DetailRow label="Số điện thoại" value={student.contact} />
+                        <DetailRow label="Phụ huynh" value={student.parentName} />
+                        <DetailRow label="Tuổi học viên" value={student.age} />
+                    </TimelineItem>
+
+                    <TimelineItem
+                        title="Thông tin học tập"
+                        subtitle="Trạng thái học hiện tại"
+                        Icon={GraduationCap}
+                        accent="teal"
+                    >
+                        <DetailRow label="Lớp học" value={student.className} />
+                        <DetailRow label="Trình độ" value={student.grade} />
+                        <DetailRow label="Giáo viên" value={student.teacher} />
+                    </TimelineItem>
+
                 </div>
 
-                <div className="flex-1 space-y-1 text-center md:text-left">
-                    <h1 className="text-3xl font-bold tracking-tight">
-                        {student.name}
-                    </h1>
-                    <p className="text-emerald-100 text-sm">
-                        {student.className} · {student.grade}
+                {/* RIGHT */}
+                <div className="space-y-6">
+
+                    <TimelineItem
+                        title="Học phí"
+                        subtitle="Học phí & thanh toán"
+                        Icon={DollarSign}
+                        accent="orange"
+                    >
+                        <DetailRow label="Học phí" value={student.fee} />
+                    </TimelineItem>
+
+                    <TimelineItem
+                        title="Thông tin buổi học"
+                        subtitle="Tiến trình học tập"
+                        Icon={Calendar}
+                        accent="fuchsia"
+                    >
+                        <DetailRow label="Số buổi đăng ký" value={student.totalSessions} />
+                        <DetailRow label="Năm bắt đầu" value={minYear ?? '-'} />
+                        <DetailRow label="Năm gần nhất" value={lastYear ?? '-'} />
+                    </TimelineItem>
+
+                </div>
+            </div>
+
+            {/* SUMMARY STRIP */}
+            <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs text-slate-500">Quyền</p>
+                    <p className="mt-1 font-semibold text-emerald-600">{roleUser}</p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs text-slate-500">Tổng buổi</p>
+                    <p className="mt-1 font-semibold text-slate-800">
+                        {student.totalSessions}
                     </p>
-
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 place-items-center sm:place-items-stretch">
-                        <div className="rounded-xl bg-white/10 p-3 text-center w-full sm:w-auto">
-                            <p className="text-xs uppercase opacity-80">Năm</p>
-                            <p className="text-lg font-bold">{lastYear}</p>
-                        </div>
-                        <div className="rounded-xl bg-white/10 p-3 text-center w-full sm:w-auto">
-                            <p className="text-xs uppercase opacity-80">Vai trò</p>
-                            <p className="text-lg font-bold">{roleUser}</p>
-                        </div>
-                    </div>
                 </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs text-slate-500">Năm học</p>
+                    <p className="mt-1 font-semibold text-slate-800">
+                        {minYear} - {lastYear}
+                    </p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs text-slate-500">Học phí</p>
+                    <p className="mt-1 font-semibold text-slate-800">
+                        {student.fee}
+                    </p>
+                </div>
+
             </div>
 
-            {/* DETAILS GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <InfoCard title="Liên hệ">
-                    <div className="space-y-3">
-                        <DetailItem label="Tài khoản" value={student.email} Icon={Mail} />
-                        <DetailItem label="Số điện thoại" value={student.contact} Icon={Phone} />
-                        <DetailItem label="Phụ huynh" value={student.parentName} Icon={User} />
-                        <DetailItem label="Tuổi học viên" value={student.age} Icon={Calendar} />
-                    </div>
-                </InfoCard>
-
-                <InfoCard title="Học tập">
-                    <div className="space-y-3">
-                        <DetailItem label="Lớp học" value={student.className} Icon={BookOpen} />
-                        <DetailItem label="Trình độ" value={student.grade} Icon={GraduationCap} />
-                        <DetailItem label="Giáo viên" value={student.teacher} Icon={User} />
-                    </div>
-                </InfoCard>
-
-                <InfoCard title="Tài chính">
-                    <div className="space-y-3">
-                        <DetailItem label="Học phí" value={student.fee} Icon={DollarSign} />
-                    </div>
-                </InfoCard>
-
-                <InfoCard title="Buổi học (Tổng quan)">
-                    <div className="grid grid-cols-2 gap-3">
-                        <DetailItem label="Số buổi đăng ký" value={student.totalSessions} Icon={Calendar} />
-                        {/* <DetailItem label="Tổng số năm đã học" value={yearlySchedule?.length || 0} Icon={Calendar} /> */}
-                        <DetailItem label="Năm bắt đầu học" value={minYear ?? "-"} Icon={Calendar} />
-                    </div>
-                </InfoCard>
-            </div>
         </div>
     );
 }
