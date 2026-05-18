@@ -126,39 +126,23 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         <section className="space-y-8 bg-gradient-to-b from-slate-50 via-white to-slate-50 p-6 rounded-3xl font-sans">
 
             {/* HEADER */}
-            <div className="rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-md p-6 shadow-sm">
-                <div className="flex items-center gap-4">
-
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl 
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-md p-6 shadow-sm">
+                <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-gradient-to-br from-violet-300/30 to-sky-300/20 blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-gradient-to-br from-sky-200/20 to-violet-200/20 blur-3xl" />
+                <div className="relative flex flex-col md:flex-row md:items-center gap-6">
+                    {/* icon */}
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl
                         bg-gradient-to-br from-violet-500 to-sky-500 text-white shadow-md">
-                        <Calendar size={20} />
+                        <Calendar size={22} />
                     </div>
-
-                    <div>
-                        <h2 className="text-lg font-semibold text-slate-900">
+                    <div className="space-y-1">
+                        <p className="uppercase tracking-[0.25em] text-xs text-violet-600 font-semibold">
                             Lịch học & Điểm danh
-                        </h2>
-                        <p className="text-sm text-slate-500">
+                        </p>
+                        <p className="text-sm text-slate-500 leading-relaxed">
                             Theo dõi lịch học theo tháng và tiến độ
                         </p>
                     </div>
-
-                    <div className="ml-auto flex items-center gap-3">
-                        <span className="text-sm text-slate-600">Năm</span>
-                        <select
-                            value={selectedYear}
-                            onChange={e => setSelectedYear(Number(e.target.value))}
-                            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium 
-                            text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-200"
-                        >
-                            {years.map(year => (
-                                <option key={year} value={year}>
-                                    {year}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
                 </div>
             </div>
 

@@ -4,32 +4,47 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-6">
-      <div className="max-w-md w-full bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg rounded-3xl p-10 text-center transition-all duration-500 hover:shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100 p-6 font-sans">
+
+      {/* background glow giống system */}
+      <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-br from-violet-300/20 to-sky-300/20 blur-3xl" />
+      <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-br from-sky-200/20 to-violet-200/20 blur-3xl" />
+
+      <div className="relative max-w-md w-full rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-sm p-10 text-center">
+
+        {/* ICON */}
         <div className="mb-8">
-          <div className="mx-auto w-14 h-14 rounded-full bg-white/70 border border-gray-200 shadow-sm flex items-center justify-center text-2xl">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl 
+            bg-gradient-to-br from-violet-500 to-sky-500 text-white shadow-md text-2xl">
             🎹
           </div>
         </div>
 
-        <h1 className="text-3xl font-semibold text-gray-900 mb-3 tracking-tight">
+        {/* TITLE */}
+        <h1 className="text-2xl font-semibold text-slate-900 mb-3">
           Ichi's Piano
         </h1>
 
-        <p className="text-gray-500 text-base leading-relaxed mb-10">
-          Quản lý, báo cáo tiến độ học tập, danh sách các cuộc thi, giải thưởng của học viên.
+        {/* DESCRIPTION */}
+        <p className="text-sm text-slate-500 leading-relaxed mb-10">
+          Quản lý tiến độ học tập, lịch học, cuộc thi và giải thưởng của học viên
         </p>
 
+        {/* BUTTON */}
         <Link
           href="/login"
-          className="inline-block px-8 py-3 rounded-xl font-medium text-gray-700 bg-white/80 border border-gray-200 hover:bg-gray-100 hover:shadow-md transition-all duration-300"
+          className="inline-flex items-center justify-center px-6 py-3 rounded-xl
+          font-medium text-white bg-gradient-to-r from-violet-500 to-sky-500
+          shadow-md hover:shadow-lg transition-all duration-300"
         >
           Đăng nhập
         </Link>
 
-        <p className="mt-8 text-gray-400 text-xs tracking-wide">
-          Designed by YChiTQ SSV 🎵
+        {/* FOOTER */}
+        <p className="mt-8 text-xs text-slate-400 tracking-wide">
+          Designed with care 🎵
         </p>
+
       </div>
     </div>
   );
