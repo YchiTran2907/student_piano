@@ -6,8 +6,12 @@ export default function manifest(): MetadataRoute.Manifest {
         short_name: "Ichi Piano",
         description: "Quản lý học tập, tiến độ, lịch học và thành tích học viên piano",
 
+        id: '/',
         start_url: '/',
+        scope: '/',
+
         display: 'standalone',
+        orientation: 'portrait',
 
         background_color: '#f8fafc',
         theme_color: '#8b5cf6',

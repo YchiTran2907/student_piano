@@ -34,12 +34,13 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100 p-6 font-sans">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100 p-6 font-sans relative overflow-x-hidden">
 
-            {/* background glow */}
-            <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-br from-violet-300/20 to-sky-300/20 blur-3xl" />
-            <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-br from-sky-200/20 to-violet-200/20 blur-3xl" />
+            {/* BACKGROUND GLOW (FIXED - không gây scroll) */}
+            <div className="fixed -top-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-br from-violet-300/20 to-sky-300/20 blur-3xl pointer-events-none" />
+            <div className="fixed -bottom-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-br from-sky-200/20 to-violet-200/20 blur-3xl pointer-events-none" />
 
+            {/* LOGIN CARD */}
             <div
                 className={`relative max-w-sm w-full rounded-3xl border border-slate-200 
                 bg-white/80 backdrop-blur-md shadow-sm p-8 transition-all duration-700 

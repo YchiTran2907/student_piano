@@ -4,11 +4,11 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100 p-6 font-sans">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100 p-6 font-sans relative overflow-x-hidden">
 
-      {/* background glow giống system */}
-      <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-br from-violet-300/20 to-sky-300/20 blur-3xl" />
-      <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-br from-sky-200/20 to-violet-200/20 blur-3xl" />
+      {/* BACKGROUND GLOW (FIXED - không gây scroll) */}
+      <div className="fixed -top-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-br from-violet-300/20 to-sky-300/20 blur-3xl pointer-events-none" />
+      <div className="fixed -bottom-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-br from-sky-200/20 to-violet-200/20 blur-3xl pointer-events-none" />
 
       <div className="relative max-w-md w-full rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-sm p-10 text-center">
 
@@ -42,7 +42,7 @@ export default function HomePage() {
 
         {/* FOOTER */}
         <p className="mt-8 text-xs text-slate-400 tracking-wide">
-          Designed with care 🎵
+          Designed by YChiTQ 🎵
         </p>
 
       </div>
