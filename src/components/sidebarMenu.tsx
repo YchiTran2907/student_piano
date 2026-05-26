@@ -22,7 +22,8 @@ export type MenuOption =
     | 'Contest'
     | 'Fee'
     | 'Attendance'
-    | 'ListSchedule';
+    | 'ListSchedule'
+    | 'Album';
 
 interface SidebarMenuProps {
     roleUser: string;
@@ -48,6 +49,7 @@ export default function SidebarMenu({
         { key: 'Contest', label: 'Cuộc thi Piano', icon: FileText, roles: ['Admin', 'Student'] },
         { key: 'Attendance', label: 'Điểm danh', icon: CalendarCheck, roles: ['Admin'] },
         { key: 'ListSchedule', label: 'Thời khoá biểu', icon: UsersRound, roles: ['Admin'] },
+        { key: 'Album', label: 'Album', icon: UsersRound, roles: ['Admin', 'Student'] },
     ];
 
     const filteredMenuItems = menuItems.filter(item =>

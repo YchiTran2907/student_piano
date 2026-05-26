@@ -9,6 +9,7 @@ import ListSchedule from "@/components/dashboardContent/ListSchedule";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAccountDataByEmail } from "../../../lib/data";
+import Album from "@/components/dashboardContent/Album";
 
 const ComingSoonContent = (title: string) => (
     <div className="p-8 bg-white rounded-xl shadow-lg h-[50vh] flex flex-col justify-center items-center">
@@ -18,7 +19,7 @@ const ComingSoonContent = (title: string) => (
 );
 
 export default async function StudentsDashboard() {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const loggedIn = (await cookieStore).get("loggedIn");
     const userEmailCookie = (await cookieStore).get("userEmail");
 
@@ -39,8 +40,9 @@ export default async function StudentsDashboard() {
     const achievementContent = <Achievement userEmail={userEmail} />;
     const contestContent = <Contest />;
     const feeContent = ComingSoonContent("Học phí");
-    const attendanceContent = <Attendance />
-    const listScheduleContent = <ListSchedule />
+    const attendanceContent = <Attendance />;
+    const listScheduleContent = <ListSchedule />;
+    const albumContent = <Album />;
 
     return (
         <DashboardLayout
@@ -53,6 +55,7 @@ export default async function StudentsDashboard() {
             feeContent={feeContent}
             attendanceContent={attendanceContent}
             listScheduleContent={listScheduleContent}
+            albumContent={albumContent}
         />
     );
 }
