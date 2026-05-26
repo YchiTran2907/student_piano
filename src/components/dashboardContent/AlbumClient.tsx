@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring, Variants } from 'framer-motion';
 
 const albums = [
     {
@@ -98,7 +98,7 @@ export default function AlbumClient() {
     }, [selectedAlbum, currentImage]);
 
     // Biến cấu hình hiệu ứng slider ảnh
-    const sliderVariants = {
+    const sliderVariants: Variants = {
         enter: (dir: number) => ({
             x: dir > 0 ? 100 : -100,
             opacity: 0
@@ -106,12 +106,16 @@ export default function AlbumClient() {
         center: {
             x: 0,
             opacity: 1,
-            transition: { duration: 0.4, ease: 'easeInOut' }
+            transition: {
+                duration: 0.4
+            }
         },
         exit: (dir: number) => ({
             x: dir > 0 ? -100 : 100,
             opacity: 0,
-            transition: { duration: 0.3, ease: 'easeInOut' }
+            transition: {
+                duration: 0.3
+            }
         })
     };
 
@@ -121,7 +125,7 @@ export default function AlbumClient() {
 
                 {/* HERO SECTION với hiệu ứng Fade-in-up */}
                 <section className="h-screen flex items-center justify-center relative">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -135,7 +139,7 @@ export default function AlbumClient() {
                             COMPETITION
                         </h2>
 
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 0.4 }}
                             transition={{ delay: 0.6, duration: 1 }}
@@ -149,14 +153,13 @@ export default function AlbumClient() {
                 {/* TIMELINE SECTION */}
                 <div className="relative">
                     {/* Đường Line Timeline chạy mượt theo cuộn chuột */}
-                    <motion.div 
+                    <motion.div
                         className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-white via-white/50 to-transparent -translate-x-1/2 origin-top"
                         style={{ scaleY }}
                     />
 
                     {albums.map((album, idx) => {
                         const isEven = idx % 2 === 0;
-                        
                         return (
                             <section
                                 key={album.year}
