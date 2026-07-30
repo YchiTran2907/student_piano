@@ -112,6 +112,12 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
         }, 0)
     );
 
+    const formattedStartDate = startDateOfMonth.toLocaleDateString("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+
     const remaining = Math.max(8 - progress, 0);
 
     const [showAllMonths, setShowAllMonths] = useState(false);
@@ -306,6 +312,9 @@ export default function ScheduleClient({ initialData, scheduleItems }: ScheduleC
                     <span>Còn {remaining} buổi</span>
                 </div>
 
+                <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                    <span className="text-sm text-slate-500">Ngày bắt đầu tính buổi: {formattedStartDate}</span>
+                </div>
             </div>
 
         </section>

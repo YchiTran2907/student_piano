@@ -7,6 +7,16 @@ import { motion, AnimatePresence, useScroll, useSpring, Variants } from 'framer-
 
 const albums = [
     {
+        year: '2026',
+        title: 'Piano Competition',
+        images: [
+            '/album/2026/3.jpg',
+            '/album/2026/2.jpg',
+            '/album/2026/1.jpg',
+            '/album/2026/4.jpg',
+        ],
+    },
+    {
         year: '2025',
         title: 'Piano Competition',
         images: [
